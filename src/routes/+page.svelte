@@ -1,4 +1,5 @@
 <script lang="ts">
+  // import { event } from "@tauri-apps/api";
   import { invoke } from "@tauri-apps/api/core";
 
   interface Application {
@@ -24,6 +25,10 @@
   let applyDate = $state("");
   let status = $state("applied");
 
+  let latexSource = $state("");
+  let compileError = $state("");
+  let pdfBlobUrl = $state("");
+
   async function greet(event: any) {
     event.preventDefault();
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -48,6 +53,29 @@
       applications = await invoke<Application[]>("list_applications");
     } catch (err) {
       message = `Error: ${err}`;
+    }
+  }
+
+  // compileError = "";
+  //   try {
+  //     const bytes = await invoke<number[]>("compile_resume", {
+  //       tex: latexSource
+  //     });
+  //     if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+  //     const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
+  //     pdfUrl = URL.createObjectURL(blob);
+
+  async function compileLatex() {
+    compileError = "";
+    try {
+      const bytes = await invoke<number[]>("compile_resume", {
+        tex: latexSource
+      });
+      const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
+      if (pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
+      pdfBlobUrl = URL.createObjectURL(blob);
+    } catch (err) {
+      compileError = String(err);
     }
   }
 
@@ -90,7 +118,22 @@
     <li>{appli.company}, {appli.position}, {appli.apply_date}, {appli.status}</li>
     {/each}
   </ul>
-</main>
+
+  <textarea
+    bind:value={latexSource}
+    rows = "12"
+    placeholder="LaTeX Source here..."
+  ></textarea>
+
+  <button onclick={compileLatex}>Compile latex</button>
+
+  {#if compileError}
+    <pre class="error">{compileError}</pre>
+  {/if}
+  {#if pdfBlobUrl}
+    <iframe title="pdf" src={pdfBlobUrl} width="100%" height="600"></iframe>
+  {/if}
+  </main>
 
 <style>
 .logo.vite:hover {

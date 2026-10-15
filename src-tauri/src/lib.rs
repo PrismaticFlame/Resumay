@@ -5,6 +5,8 @@ mod latex;
 
 use std::sync::Mutex;
 use tauri::Manager;
+use tauri::AppHandle;
+use tauri_plugin_shell::ShellExt;
 
 pub struct DbState(pub Mutex<rusqlite::Connection>);
 
@@ -26,6 +28,11 @@ fn list_applications(state: tauri::State<DbState>) -> Result<Vec<db::Application
     db::list_applications(&conn).map_err(|e| e.to_string())
 }
 
+#[tauri::command]
+async fn compile_resume(app: AppHandle, tex: String) -> Result<Vec<u8>, String> {
+    latex::compile(&app, &tex).await
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -37,17 +44,13 @@ pub fn run() {
             let conn = rusqlite::Connection::open(dir.join("resumay.db"))?;
             db::init(&conn)?;
             app.manage(DbState(Mutex::new(conn)));
-            let handle = app.handle().clone();
-            tauri::async_runtime::spawn(async move {
-                let tex = r"\documentclass[12pt]{article}\begin{document}Hello world!$Hello world!$\end{document}";
-                match latex::compile(&handle, tex).await {
-                    Ok(pdf) => println!("PDF compiled: {} bytes", pdf.len()),
-                    Err(e) => eprintln!("Compile failed:\n{e}"),
-                }
-            });
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![greet, add_application, list_applications])
+        .invoke_handler(tauri::generate_handler![
+            greet, 
+            add_application, 
+            list_applications,
+            compile_resume])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
