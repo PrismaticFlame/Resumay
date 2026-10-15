@@ -56,15 +56,6 @@
     }
   }
 
-  // compileError = "";
-  //   try {
-  //     const bytes = await invoke<number[]>("compile_resume", {
-  //       tex: latexSource
-  //     });
-  //     if (pdfUrl) URL.revokeObjectURL(pdfUrl);
-  //     const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
-  //     pdfUrl = URL.createObjectURL(blob);
-
   async function compileLatex() {
     compileError = "";
     try {

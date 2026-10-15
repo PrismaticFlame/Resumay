@@ -2,10 +2,12 @@
 
 mod db;
 mod latex;
+mod credentials;
 
 use std::sync::Mutex;
 use tauri::Manager;
 use tauri::AppHandle;
+use keyring_core::{set_default_store};
 // use tauri_plugin_shell::ShellExt;
 
 pub struct DbState(pub Mutex<rusqlite::Connection>);
@@ -44,6 +46,8 @@ pub fn run() {
             let conn = rusqlite::Connection::open(dir.join("resumay.db"))?;
             db::init(&conn)?;
             app.manage(DbState(Mutex::new(conn)));
+            let store = dbus_secret_service_keyring_store::Store::new().map_err(|e| format!("create store: {e}"))?;
+            set_default_store(store);
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

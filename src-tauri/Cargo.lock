@@ -3272,7 +3272,9 @@ dependencies = [
 name = "resumay"
 version = "0.1.0"
 dependencies = [
+ "dbus-secret-service-keyring-store",
  "keyring",
+ "keyring-core",
  "rusqlite",
  "serde",
  "serde_json",

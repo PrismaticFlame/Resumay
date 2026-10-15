@@ -27,6 +27,8 @@ tauri-plugin-shell = "2.5.0"
 keyring = { version = "4.2.0", features = ["apple-native-keyring-store", 
                                            "windows-native-keyring-store", 
                                            "dbus-secret-service-keyring-store"] }
+keyring-core = "1.0.1"
+dbus-secret-service-keyring-store = "1.0.1"
 
 
 
