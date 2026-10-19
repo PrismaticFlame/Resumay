@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS applications (
     company TEXT NOT NULL,
     position TEXT NOT NULL,
     website TEXT,
+    username TEXT,
     status TEXT DEFAULT 'applied',
     resume INTEGER REFERENCES resumes(id),
     notes TEXT,

@@ -7,6 +7,7 @@
     company: string;
     position: string;
     website: string | null;
+    username: string | null;
     status: string;
     resume: number | null;
     notes: string | null;
@@ -22,12 +23,18 @@
 
   let company = $state("");
   let position = $state("");
+  let website = $state("");
+  let username = $state("");
   let applyDate = $state("");
   let status = $state("applied");
+  let notes = $state("");
+  let refer = $state("");
 
   let latexSource = $state("");
   let compileError = $state("");
   let pdfBlobUrl = $state("");
+
+  let password = $state("");
 
   async function greet(event: any) {
     event.preventDefault();
@@ -39,9 +46,10 @@
     event.preventDefault();
     try {
       const id = await invoke<number>("add_application", {
-        company, position, applyDate, status,
+        company, position, website, username, applyDate, status, notes, refer, password
       });
       message = `Application ${id} added!`;
+      password = "";
       await listApplications();
     } catch (err) {
       message = `Error: ${err}`;
@@ -94,11 +102,16 @@
   </form>
   <p>{greetMsg}</p>
 
-  <form class="greet" onsubmit={addApplication}>
+  <form id="appliform" class="greet" onsubmit={addApplication}>
     <input id="company" placeholder="Company name..." bind:value={company} />
     <input id="position" placeholder="Position..." bind:value={position} />
+    <input id="website" placeholder="Website URL..." bind:value={website} />
     <input id="applyDate" type="date" bind:value={applyDate} />
     <input id="status" placeholder="Status of Application" bind:value={status} />
+    <textarea id="notes" placeholder="Notes..." bind:value={notes}></textarea>
+    <input id="refer" placeholder="Referral..." bind:value={refer} />
+    <input id="username" placeholder="Username..." bind:value={username} />
+    <input id="password" placeholder="Password..." type="password" bind:value={password} />
     <button type="submit">Add Application</button>
   </form>
   <p>{message}</p>

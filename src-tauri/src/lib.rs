@@ -18,10 +18,16 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-fn add_application(state: tauri::State<DbState>, company: &str, position: &str, website: Option<&str>, status: &str, 
-                    resume: Option<i32>, notes: Option<&str>, refer: Option<&str>, apply_date: &str) -> Result<i32, String> {
-    let conn = state.0.lock().map_err(|e| e.to_string())?;
-    db::add_application(&conn, company, position, website, status, resume, notes, refer, apply_date).map_err(|e| e.to_string())
+fn add_application(state: tauri::State<DbState>, company: &str, position: &str, website: Option<&str>, username: Option<&str>, status: &str, 
+                    resume: Option<i32>, notes: Option<&str>, refer: Option<&str>, apply_date: &str, password: Option<&str>) -> Result<i32, String> {
+    let id = {
+        let conn = state.0.lock().map_err(|e| e.to_string())?;
+        db::add_application(&conn, company, position, website, username, status, resume, notes, refer, apply_date).map_err(|e| e.to_string())?
+    };
+    if let Some(pw) = password.filter(|p| !p.is_empty()) {
+        credentials::save_credential(id, pw)?;
+    }
+    Ok(id)
 }
 
 #[tauri::command]
@@ -54,6 +60,9 @@ pub fn run() {
             greet, 
             add_application, 
             list_applications,
+            credentials::save_credential,
+            credentials::get_credential,
+            credentials::delete_credential,
             compile_resume])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
