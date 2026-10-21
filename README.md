@@ -19,3 +19,5 @@ Resume tracking application, to keep track of the mass amounts of applications S
 ## WIP
 
 Currently still working on it. In 'Alpha', if you will.
+
+![Resumay-Version-1](static/resumay_version_1_frontend_alpha.png)
