@@ -1,6 +1,12 @@
 <script lang="ts">
   // import { event } from "@tauri-apps/api";
   import { invoke } from "@tauri-apps/api/core";
+  import { onMount } from 'svelte';
+  import { STATUS } from "$lib/status";
+
+  import Rail from "$lib/component/Rail.svelte";
+  import DetailPane from "$lib/component/DetailPane.svelte";
+  import AppList from "$lib/component/AppList.svelte";
 
   interface Application {
     id: number;
@@ -15,11 +21,30 @@
     apply_date: string;
   }
 
+  onMount(() => {
+    listApplications()
+  });
+
+  let filter = $state("all");
+  let query = $state("");
+  let selectedId = $state<number | null>(null);
+  let showModal = $state(false);
+  // let visible = $derived(applications.filter(a =>
+  // (filter === "all" || a.status === filter) &&
+  // `${a.company} ${a.position}`.toLowerCase().includes(query.toLowerCase())
+  // ));
+
   let name = $state("");
   let greetMsg = $state("");
 
   let message = $state("");
   let applications = $state<Application[]>([]);
+
+  let visible = $derived(applications.filter(a =>
+  (filter === "all" || a.status === filter) &&
+  `${a.company} ${a.position}`.toLowerCase().includes(query.toLowerCase())
+  ));
+  let selected = $derived(visible.find(a => a.id === selectedId) ?? visible[0]);
 
   let company = $state("");
   let position = $state("");
@@ -50,6 +75,7 @@
       });
       message = `Application ${id} added!`;
       password = "";
+      showModal = false;
       await listApplications();
     } catch (err) {
       message = `Error: ${err}`;
@@ -80,27 +106,8 @@
 
 </script>
 
-<main class="container">
-  <h1>Welcome to Tauri + Svelte</h1>
-
-  <div class="row">
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo vite" alt="Vite Logo" />
-    </a>
-    <a href="https://tauri.app" target="_blank">
-      <img src="/tauri.svg" class="logo tauri" alt="Tauri Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank">
-      <img src="/svelte.svg" class="logo svelte-kit" alt="SvelteKit Logo" />
-    </a>
-  </div>
-  <p>Click on the Tauri, Vite, and SvelteKit logos to learn more.</p>
-
-  <form class="row" onsubmit={greet}>
-    <input id="greet-input" placeholder="Enter a name..." bind:value={name} />
-    <button type="submit">Greet</button>
-  </form>
-  <p>{greetMsg}</p>
+<!-- <main class="container">
+  <h1>Resumay</h1>
 
   <form id="appliform" class="greet" onsubmit={addApplication}>
     <input id="company" placeholder="Company name..." bind:value={company} />
@@ -116,7 +123,8 @@
   </form>
   <p>{message}</p>
 
-  <button onclick={listApplications}>Show Applications</button>
+  <AppList apps={visible} selectedId={selectedId?.id} onselect={(id) => selectedId = id} />
+
   <ul>
     {#each applications as appli (appli.id)}
     <li>{appli.company}, {appli.position}, {appli.apply_date}, {appli.status}</li>
@@ -137,125 +145,84 @@
   {#if pdfBlobUrl}
     <iframe title="pdf" src={pdfBlobUrl} width="100%" height="600"></iframe>
   {/if}
+  </main> -->
+
+<div class="shell">
+  <Rail />
+  <main>
+    <header>
+      <div>
+        <h1>Applications</h1>
+        <span class="sub">{applications.length} tracked</span>
+      </div>
+      <input type="search" placeholder="Search company or role" bind:value={query} />
+      <button class="primary" onclick={() => showModal = true}>+ New application</button>
+    </header>
+
+    <div class="chips">
+      {#each ["all", ...Object.keys(STATUS)] as f}
+        <button class="chip" class:on={filter === f} onclick={() => filter = f}>{f}</button>
+      {/each}
+    </div>
+
+    <div class="work">
+      <div><AppList apps={visible} selectedId={selected?.id} onselect={(id) => selectedId = id} /></div>
+      <div>{#if selected}<DetailPane app={selected} />{/if}</div>
+    </div>
+
+    {#if showModal}
+    <div class="overlay">
+      <div class="dialog">
+        <form id="appliform" class="greet" onsubmit={addApplication}>
+          <input id="company" placeholder="Company name..." bind:value={company} />
+          <input id="position" placeholder="Position..." bind:value={position} />
+          <input id="website" placeholder="Website URL..." bind:value={website} />
+          <input id="applyDate" type="date" bind:value={applyDate} />
+          <input id="status" placeholder="Status of Application" bind:value={status} />
+          <textarea id="notes" placeholder="Notes..." bind:value={notes}></textarea>
+          <input id="refer" placeholder="Referral..." bind:value={refer} />
+          <input id="username" placeholder="Username..." bind:value={username} />
+          <input id="password" placeholder="Password..." type="password" bind:value={password} />
+          <button type="submit">Add Application</button>
+        </form>
+        <p>{message}</p>
+        <button type="button" onclick={() => showModal = false}>Close</button>
+      </div>
+    </div>
+  {/if}
   </main>
+</div>
 
 <style>
-.logo.vite:hover {
-  filter: drop-shadow(0 0 2em #747bff);
-}
+  
+  .shell { display: grid; grid-template-columns: 224px 1fr; height: 100vh; }
+main { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+header { display: flex; align-items: center; gap: 16px; padding: 22px 28px 14px; }
+header div { flex: 1; }
+h1 { margin: 0; font-size: 24px; font-weight: 600; }
+.sub { color: var(--muted); font-size: 13px; }
+input[type="search"] { width: 300px; min-height: 44px; padding: 0 12px;
+  border: 1px solid #D1D5DB; border-radius: 8px; background: var(--surface); }
+.primary { min-height: 44px; padding: 0 18px; border: none; border-radius: 8px;
+  background: var(--accent); color: #fff; font-weight: 600; cursor: pointer; }
 
-.logo.svelte-kit:hover {
-  filter: drop-shadow(0 0 2em #ff3e00);
-}
+.chips { display: flex; gap: 8px; padding: 0 28px 16px; }
+.chip { min-height: 40px; padding: 0 14px; border-radius: 999px; cursor: pointer;
+  border: 1px solid #D1D5DB; background: var(--surface); text-transform: capitalize; }
+.chip.on { background: var(--ink); border-color: var(--ink); color: #fff; }
 
-:root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
+.work { display: grid; grid-template-columns: 1fr 420px; gap: 20px;
+  flex: 1; min-height: 0; padding: 0 28px 28px; }
+.work > div { background: var(--surface); border: 1px solid var(--line);
+  border-radius: 12px; overflow: auto; }
 
-  color: #0f0f0f;
-  background-color: #f6f6f6;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-}
-
-.container {
-  margin: 0;
-  padding-top: 10vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: 0.75s;
-}
-
-.logo.tauri:hover {
-  filter: drop-shadow(0 0 2em #24c8db);
-}
-
-.row {
-  display: flex;
-  justify-content: center;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
-
-h1 {
-  text-align: center;
-}
-
-input,
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  color: #0f0f0f;
-  background-color: #ffffff;
-  transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-}
-
-button {
-  cursor: pointer;
-}
-
-button:hover {
-  border-color: #396cd8;
-}
-button:active {
-  border-color: #396cd8;
-  background-color: #e8e8e8;
-}
-
-input,
-button {
-  outline: none;
-}
-
-#greet-input {
-  margin-right: 5px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #f6f6f6;
-    background-color: #2f2f2f;
-  }
-
-  a:hover {
-    color: #24c8db;
-  }
-
-  input,
-  button {
-    color: #ffffff;
-    background-color: #0f0f0f98;
-  }
-  button:active {
-    background-color: #0f0f0f69;
-  }
-}
+.overlay { position: fixed; inset: 0; display: flex; align-items: center;
+  justify-content: center; background: rgba(17, 24, 39, .38); backdrop-filter: blur(6px); }
+.dialog { width: min(560px, 90vw); max-height: 90vh; overflow: auto; padding: 24px;
+  border-radius: 16px; background: rgba(255, 255, 255, .9); backdrop-filter: blur(20px); }
+.dialog form { display: flex; flex-direction: column; gap: 10px; }
+.dialog input, .dialog textarea { min-height: 44px; padding: 8px 12px;
+  border: 1px solid #D1D5DB; border-radius: 8px; }
 
 </style>
+

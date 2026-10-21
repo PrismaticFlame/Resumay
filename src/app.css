@@ -1,0 +1,20 @@
+:root {
+    --bg: #F3F4F6; --surface: #FFFFFF; --ink: #111827;
+    --muted: #4B5563; --line: #E5E7EB;
+    --accent: #3346D3; --accent-weak: #EEF0FF;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 14px;
+}
+body { margin: 0; background: var(--bg); color: var(--ink); }
+button, input, select, textarea { font: inherit; }
+.row { display: grid; grid-template-columns: minmax(0, 2.4fr) 140px 110px; gap: 16px;
+       align-items: center; width: 100%; padding: 14px 20px; border: none;
+       border-bottom: 1px solid #F1F2F4; background: transparent;
+       color: inherit; text-align: left; cursor: pointer; }
+.row.on { background: var(--accent-weak); box-shadow: inset 3px 0 0 var(--accent); }
+.head { position: sticky; top: 0; background: #F9FAFB; cursor: default; font-size: 12px;
+        font-weight: 600; color: var(--muted); text-transform: uppercase;
+        letter-spacing: .05em; padding: 12px 20px; }
+.who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+small { color: var(--muted); font-size: 13px; }
+.mono { font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
