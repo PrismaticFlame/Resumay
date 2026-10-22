@@ -31,9 +31,20 @@ fn add_application(state: tauri::State<DbState>, company: &str, position: &str, 
 }
 
 #[tauri::command]
+fn delete_application(state: tauri::State<DbState>, id: i32) ->Result<(), String> {
+    let _del = {
+        let conn = state.0.lock().map_err(|e| e.to_string())?;
+        db::delete_application(&conn, id).map_err(|e| e.to_string())?;
+    };
+    credentials::delete_credential(id)?;
+    Ok(())
+}
+
+#[tauri::command]
 fn list_applications(state: tauri::State<DbState>) -> Result<Vec<db::Application>, String> {
     let conn = state.0.lock().map_err(|e| e.to_string())?;
     db::list_applications(&conn).map_err(|e| e.to_string())
+
 }
 
 #[tauri::command]
@@ -79,6 +90,7 @@ pub fn run() {
             greet, 
             add_application, 
             list_applications,
+            delete_application,
             credentials::save_credential,
             credentials::get_credential,
             credentials::delete_credential,

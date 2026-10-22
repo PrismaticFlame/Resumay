@@ -63,3 +63,9 @@ pub fn list_applications(conn: &Connection) -> Result<Vec<Application>, rusqlite
 
     Ok(application_list)
 }
+
+
+pub fn delete_application(conn: &Connection, id: i32) -> Result<(), String> {
+    conn.execute("DELETE FROM applications WHERE id = ?1", [id]).map_err(|e| e.to_string())?;
+    Ok(())
+}

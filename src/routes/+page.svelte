@@ -7,6 +7,7 @@
   import Rail from "$lib/component/Rail.svelte";
   import DetailPane from "$lib/component/DetailPane.svelte";
   import AppList from "$lib/component/AppList.svelte";
+  import NewApplicationModal from "$lib/component/NewApplicationModal.svelte"
 
   interface Application {
     id: number;
@@ -46,20 +47,9 @@
   ));
   let selected = $derived(visible.find(a => a.id === selectedId) ?? visible[0]);
 
-  let company = $state("");
-  let position = $state("");
-  let website = $state("");
-  let username = $state("");
-  let applyDate = $state("");
-  let status = $state("applied");
-  let notes = $state("");
-  let refer = $state("");
-
   let latexSource = $state("");
   let compileError = $state("");
   let pdfBlobUrl = $state("");
-
-  let password = $state("");
 
   async function greet(event: any) {
     event.preventDefault();
@@ -67,24 +57,19 @@
     greetMsg = await invoke("greet", { name });
   }
 
-  async function addApplication(event: Event) {
-    event.preventDefault();
+  async function listApplications() {
     try {
-      const id = await invoke<number>("add_application", {
-        company, position, website, username, applyDate, status, notes, refer, password
-      });
-      message = `Application ${id} added!`;
-      password = "";
-      showModal = false;
-      await listApplications();
+      applications = await invoke<Application[]>("list_applications");
     } catch (err) {
       message = `Error: ${err}`;
     }
   }
 
-  async function listApplications() {
+  async function deleteApplication(id: number) {
     try {
-      applications = await invoke<Application[]>("list_applications");
+      await invoke("delete_application", { id });
+      selectedId = null;
+      await listApplications();
     } catch (err) {
       message = `Error: ${err}`;
     }
@@ -102,6 +87,12 @@
     } catch (err) {
       compileError = String(err);
     }
+  }
+
+  async function handleSaved(id: number) {
+    await listApplications();
+    selectedId = id;
+    showModal = false;
   }
 
 </script>
@@ -166,29 +157,18 @@
     </div>
 
     <div class="work">
-      <div><AppList apps={visible} selectedId={selected?.id} onselect={(id) => selectedId = id} /></div>
-      <div>{#if selected}<DetailPane app={selected} />{/if}</div>
+      <div><AppList apps={visible} selectedId={selected?.id} onselect={(id: number) => selectedId = id} /></div>
+      <div>
+        {#if selected}
+          {#key selected.id}
+            <DetailPane app={selected} ondelete={() => deleteApplication(selected.id)} />
+          {/key}
+        {/if}
+      </div>
     </div>
 
     {#if showModal}
-    <div class="overlay">
-      <div class="dialog">
-        <form id="appliform" class="greet" onsubmit={addApplication}>
-          <input id="company" placeholder="Company name..." bind:value={company} />
-          <input id="position" placeholder="Position..." bind:value={position} />
-          <input id="website" placeholder="Website URL..." bind:value={website} />
-          <input id="applyDate" type="date" bind:value={applyDate} />
-          <input id="status" placeholder="Status of Application" bind:value={status} />
-          <textarea id="notes" placeholder="Notes..." bind:value={notes}></textarea>
-          <input id="refer" placeholder="Referral..." bind:value={refer} />
-          <input id="username" placeholder="Username..." bind:value={username} />
-          <input id="password" placeholder="Password..." type="password" bind:value={password} />
-          <button type="submit">Add Application</button>
-        </form>
-        <p>{message}</p>
-        <button type="button" onclick={() => showModal = false}>Close</button>
-      </div>
-    </div>
+      <NewApplicationModal onclose={() => showModal = false} onsaved={handleSaved} />
   {/if}
   </main>
 </div>
@@ -215,14 +195,6 @@ input[type="search"] { width: 300px; min-height: 44px; padding: 0 12px;
   flex: 1; min-height: 0; padding: 0 28px 28px; }
 .work > div { background: var(--surface); border: 1px solid var(--line);
   border-radius: 12px; overflow: auto; }
-
-.overlay { position: fixed; inset: 0; display: flex; align-items: center;
-  justify-content: center; background: rgba(17, 24, 39, .38); backdrop-filter: blur(6px); }
-.dialog { width: min(560px, 90vw); max-height: 90vh; overflow: auto; padding: 24px;
-  border-radius: 16px; background: rgba(255, 255, 255, .9); backdrop-filter: blur(20px); }
-.dialog form { display: flex; flex-direction: column; gap: 10px; }
-.dialog input, .dialog textarea { min-height: 44px; padding: 8px 12px;
-  border: 1px solid #D1D5DB; border-radius: 8px; }
 
 </style>
 

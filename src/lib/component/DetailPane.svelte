@@ -1,6 +1,7 @@
 <script lang="ts">
     import StatusPill from "./StatusPill.svelte";
-    let { app } = $props();
+    let { app, ondelete } = $props();
+    let confirming = $state(false);
 </script>
 
 <div class="pane">
@@ -18,6 +19,16 @@
     <h3>Notes</h3><p>{app.notes ?? "—"}</p>
 </div>
 
+<div class="danger">
+    {#if confirming}
+        <span>Delete this application?</span>
+        <button class="del" onclick={ondelete}>Yes, delete</button>
+        <button onclick={() => confirming = false}>Cancel</button>
+    {:else}
+        <button class="del-ghost" onclick={() => confirming = true}>Delete</button>
+    {/if}
+</div>
+
 <style>
     .pane { padding: 24px; }
     h2 { margin: 10px 0 2px; font-size: 22px; font-weight: 600; }
@@ -28,4 +39,10 @@
     dt { color: var(--muted); font-size: 13px; }
     dd { margin: 0; }
     .mono { font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
+    .danger { display: flex; align-items: center; gap: 8px; margin-top: 28px;
+          padding-top: 16px; border-top: 1px solid var(--line); }
+    .danger button { min-height: 44px; padding: 0 14px; border-radius: 8px;
+                    border: 1px solid #D1D5DB; background: #fff; cursor: pointer; }
+    .del { background: #B91C1C !important; border-color: #B91C1C !important; color: #fff; }
+    .del-ghost { color: #B91C1C; }
 </style>
