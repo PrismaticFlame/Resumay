@@ -1,6 +1,3 @@
-# Resumay
-
-
 ![Resumay Logo](src/lib/assets/resumay-logo.svg)
 
 
