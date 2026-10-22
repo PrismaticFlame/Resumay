@@ -1,5 +1,9 @@
 # Resumay
 
+
+![Resumay Logo](src/lib/assets/resumay-logo.svg)
+
+
 <div align="center">
 
 [![SvelteKit](https://img.shields.io/badge/SvelteKit-%23f1413d.svg?logo=svelte&logoColor=white)](https://svelte.dev/docs/kit/introduction)
