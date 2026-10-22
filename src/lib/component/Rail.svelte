@@ -3,7 +3,7 @@
 </script>
 
 <nav>
-    <div class="brand"><img src={logo} alt="Resumay" width="175px" height="50px"></div>
+    <div class="brand"><img src={logo} alt="Resumay" width="190px" height="50px"></div>
     <button class="item on">Applications</button>
     <button class="item">Resumes</button>
     <button class="item">Tailor</button>
