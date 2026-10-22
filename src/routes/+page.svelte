@@ -139,12 +139,14 @@
   </main> -->
 
 <div class="shell">
-  <Rail />
+  <Rail count={applications.length}/>
   <main>
     <header>
       <div>
         <h1>Applications</h1>
-        <span class="sub">{applications.length} tracked</span>
+        {#if filter !== "all" || query}
+          <span class="sub">{visible.length} of {applications.length} shown</span>
+        {/if}
       </div>
       <input type="search" placeholder="Search company or role" bind:value={query} />
       <button class="primary" onclick={() => showModal = true}>+ New application</button>

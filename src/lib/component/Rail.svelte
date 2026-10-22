@@ -1,10 +1,17 @@
 <script lang="ts">
     import logo from "$lib/assets/resumay-logo.svg"
+
+    let { count } = $props();
 </script>
 
 <nav>
-    <div class="brand"><img src={logo} alt="Resumay" width="190px" height="50px"></div>
-    <button class="item on">Applications</button>
+    <div class="brand">
+        <img src={logo} alt="Resumay" width="190px" height="50px">
+    </div>
+    <button class="item on">
+        <span>Applications</span>
+        <span class="count">{count}</span>
+    </button>
     <button class="item">Resumes</button>
     <button class="item">Tailor</button>
 </nav>
@@ -16,4 +23,6 @@
     .item { text-align: left; min-height: 44px; padding: 0 12px; border: none; 
             border-radius: 8px; background: transparent; color: var(--ink); cursor: pointer; }
     .item.on { background: var(--accent-weak); color: var(--accent); font-weight: 600; }
+    .item { display: flex; align-items: center; justify-content: space-between; }
+    .count { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
 </style>
