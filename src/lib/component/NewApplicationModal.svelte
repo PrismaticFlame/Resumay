@@ -2,26 +2,33 @@
     import { invoke } from "@tauri-apps/api/core";
     import { STATUS } from "$lib/status";
 
-    let { onclose, onsaved } = $props();
+    let { onclose, onsaved, app = null } = $props();
 
-    let company = $state("");
-    let position = $state("");
-    let website = $state("");
-    let username = $state("");
+    let company = $state(app?.company ?? "");
+    let position = $state(app?.position ?? "");
+    let website = $state(app?.website ?? "");
+    let username = $state(app?.username ?? "");
     let password = $state("");
-    let applyDate = $state(new Date().toLocaleDateString("en-CA"));
-    let status = $state("applied");
-    let notes = $state("");
-    let refer = $state("");
+    let applyDate = $state(app?.apply_date ?? new Date().toLocaleDateString("en-CA"));
+    let status = $state(app?.status ?? "applied");
+    let notes = $state(app?.notes ?? "");
+    let refer = $state(app?.refer ?? "");
     let error = $state("");
 
     async function submit(event: Event) {
         event.preventDefault();
         try {
+          if (app) {
+            await invoke("update_application", {
+              id: app.id, company, position, website, username, applyDate, status, notes, refer, password
+            });
+            onsaved(app.id)
+          } else {
             const id = await invoke<number>("add_application", {
                 company, position, website, username, applyDate, status, notes, refer, password
             }); 
             onsaved(id);
+          }
         } catch(err) {
             error = String(err);
         }
@@ -30,7 +37,7 @@
 
 <div class="overlay">
     <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="new-title">
-        <h2 id="new-title">New application</h2>
+        <h2 id="new-title">{app ? "Edit application" : "New application"}</h2>
 
         <form onsubmit={submit}>
         <input placeholder="Company *" bind:value={company} required />
@@ -46,14 +53,15 @@
 
         <input placeholder="Referral" bind:value={refer} />
         <input placeholder="Username" bind:value={username} />
-        <input placeholder="Password" type="password" bind:value={password} />
+        <input type="password" bind:value={password} 
+            placeholder={app ? "New password (blank = keep current)" : "Password"}/>
         <textarea placeholder="Notes" bind:value={notes}></textarea>
 
         {#if error}<p class="error">{error}</p>{/if}
 
         <div class="actions">
             <button type="button" onclick={onclose}>Cancel</button>
-            <button type="submit" class="primary">Save application</button>
+            <button type="submit" class="primary">{app ? "Save changes" : "Save application"}</button>
         </div>
         </form>
     </div>

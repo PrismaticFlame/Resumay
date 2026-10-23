@@ -14,6 +14,7 @@
     company: string;
     position: string;
     website: string | null;
+    job_description: string | null;
     username: string | null;
     status: string;
     resume: number | null;
@@ -30,6 +31,7 @@
   let query = $state("");
   let selectedId = $state<number | null>(null);
   let showModal = $state(false);
+  let editing = $state<Application | null>(null);
   // let visible = $derived(applications.filter(a =>
   // (filter === "all" || a.status === filter) &&
   // `${a.company} ${a.position}`.toLowerCase().includes(query.toLowerCase())
@@ -93,6 +95,7 @@
     await listApplications();
     selectedId = id;
     showModal = false;
+    editing = null;
   }
 
 </script>
@@ -163,7 +166,7 @@
       <div>
         {#if selected}
           {#key selected.id}
-            <DetailPane app={selected} ondelete={() => deleteApplication(selected.id)} />
+            <DetailPane app={selected} ondelete={() => deleteApplication(selected.id)} onedit={() => editing = selected}/>
           {/key}
         {/if}
       </div>
@@ -171,7 +174,11 @@
 
     {#if showModal}
       <NewApplicationModal onclose={() => showModal = false} onsaved={handleSaved} />
-  {/if}
+    {/if}
+
+    {#if editing}
+      <NewApplicationModal app={editing} onclose={() => editing = null} onsaved={handleSaved} />
+    {/if}
   </main>
 </div>
 

@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS applications (
     id INTEGER PRIMARY KEY,
     company TEXT NOT NULL,
     position TEXT NOT NULL,
+    job_description TEXT,
     website TEXT,
     username TEXT,
     status TEXT DEFAULT 'applied',

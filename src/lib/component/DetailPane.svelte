@@ -1,11 +1,16 @@
 <script lang="ts">
     import StatusPill from "./StatusPill.svelte";
-    let { app, ondelete } = $props();
+    let { app, ondelete, onedit } = $props();
     let confirming = $state(false);
+    let editing = $state(false);
 </script>
 
 <div class="pane">
-    <StatusPill status={app.status} />
+    <div class="top">
+        <StatusPill status={app.status} />
+        <button class="edit" onclick={() => onedit(app)}>Edit</button>
+    </div>
+    
     <h2>{app.company}</h2>
     <p class="role">{app.position}</p>
 
@@ -40,9 +45,12 @@
     dd { margin: 0; }
     .mono { font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
     .danger { display: flex; align-items: center; gap: 8px; margin-top: 28px;
-          padding-top: 16px; border-top: 1px solid var(--line); }
+          padding-top: 16px; padding-left: 16px; border-top: 1px solid var(--line); }
     .danger button { min-height: 44px; padding: 0 14px; border-radius: 8px;
                     border: 1px solid #D1D5DB; background: #fff; cursor: pointer; }
     .del { background: #B91C1C !important; border-color: #B91C1C !important; color: #fff; }
     .del-ghost { color: #B91C1C; }
+    .top { display: flex; align-items: center; justify-content: space-between; }
+    .edit { min-height: 44px; padding: 0 14px; border-radius: 8px;
+            border: 1px solid #D1D5DB; background: #fff; cursor: pointer; }
 </style>
