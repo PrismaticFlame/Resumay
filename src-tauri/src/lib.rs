@@ -22,7 +22,7 @@ fn add_application(state: tauri::State<DbState>, company: &str, position: &str, 
                     resume: Option<i32>, notes: Option<&str>, refer: Option<&str>, apply_date: &str, password: Option<&str>) -> Result<i32, String> {
     let id = {
         let conn = state.0.lock().map_err(|e| e.to_string())?;
-        db::add_application(&conn, company, position, job_description, website, username, status, resume, notes, refer, apply_date).map_err(|e| e.to_string())?
+        db::add_application(&conn, company, position, website, job_description, username, status, resume, notes, refer, apply_date).map_err(|e| e.to_string())?
     };
     if let Some(pw) = password.filter(|p| !p.is_empty()) {
         credentials::save_credential(id, pw)?;
@@ -48,11 +48,14 @@ fn list_applications(state: tauri::State<DbState>) -> Result<Vec<db::Application
 
 #[tauri::command]
 fn update_application(state: tauri::State<DbState>, id: i32, company: &str, position: &str, website: Option<&str>, job_description: Option<&str>, username: Option<&str>, status: &str, 
-                    resume: Option<i32>, notes: Option<&str>, refer: Option<&str>, apply_date: &str) -> Result<usize, String> {
+                    resume: Option<i32>, notes: Option<&str>, refer: Option<&str>, apply_date: &str, password: Option<&str>) -> Result<usize, String> {
     let updated = {
         let conn = state.0.lock().map_err(|e| e.to_string())?;
         db::update_application(&conn, id, company, position, website, job_description, username, status, resume, notes, refer, apply_date).map_err(|e| e.to_string())?
     };
+    if let Some(pw) = password.filter(|p| !p.is_empty()) {
+        credentials::save_credential(id, pw)?;
+    }
     Ok(updated)
 }
 

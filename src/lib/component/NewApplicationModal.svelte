@@ -7,6 +7,7 @@
     let company = $state(app?.company ?? "");
     let position = $state(app?.position ?? "");
     let website = $state(app?.website ?? "");
+    let jobDescription = $state(app?.job_description ?? "");
     let username = $state(app?.username ?? "");
     let password = $state("");
     let applyDate = $state(app?.apply_date ?? new Date().toLocaleDateString("en-CA"));
@@ -20,12 +21,12 @@
         try {
           if (app) {
             await invoke("update_application", {
-              id: app.id, company, position, website, username, applyDate, status, notes, refer, password
+              id: app.id, company, position, website, jobDescription, username, applyDate, status, notes, refer, password
             });
             onsaved(app.id)
           } else {
             const id = await invoke<number>("add_application", {
-                company, position, website, username, applyDate, status, notes, refer, password
+                company, position, website, jobDescription, username, applyDate, status, notes, refer, password
             }); 
             onsaved(id);
           }
@@ -43,6 +44,7 @@
         <input placeholder="Company *" bind:value={company} required />
         <input placeholder="Position *" bind:value={position} required />
         <input placeholder="Website URL" bind:value={website} />
+        <textarea placeholder="Job Description" bind:value={jobDescription}></textarea>
         <input type="date" bind:value={applyDate} />
 
         <select bind:value={status}>

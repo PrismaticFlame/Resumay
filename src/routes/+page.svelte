@@ -32,10 +32,6 @@
   let selectedId = $state<number | null>(null);
   let showModal = $state(false);
   let editing = $state<Application | null>(null);
-  // let visible = $derived(applications.filter(a =>
-  // (filter === "all" || a.status === filter) &&
-  // `${a.company} ${a.position}`.toLowerCase().includes(query.toLowerCase())
-  // ));
 
   let name = $state("");
   let greetMsg = $state("");
@@ -52,12 +48,6 @@
   let latexSource = $state("");
   let compileError = $state("");
   let pdfBlobUrl = $state("");
-
-  async function greet(event: any) {
-    event.preventDefault();
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    greetMsg = await invoke("greet", { name });
-  }
 
   async function listApplications() {
     try {

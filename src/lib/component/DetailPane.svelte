@@ -20,6 +20,9 @@
         <dt>Username</dt><dd class="mono">{app.username ?? "—"}</dd>
     </dl>
 
+    <h3>Job Description</h3>
+    <p class="job_descrip">{app.job_description ?? ""}</p>
+
     <h3>Referral</h3><p>{app.refer ?? "—"}</p>
     <h3>Notes</h3><p>{app.notes ?? "—"}</p>
 </div>
@@ -40,6 +43,11 @@
     .role { margin: 0 0 20px; }
     h3 { margin: 20px 0 8px; font-size: 12px; font-weight: 600; color: var(--muted);
          text-transform: uppercase; letter-spacing: .06em; }
+    .job_descrip { 
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        max-height: 300px;
+        overflow-y: auto; }
     dl { display: grid; grid-template-columns: 96px 1fr; gap: 8px 12px; margin: 0; }
     dt { color: var(--muted); font-size: 13px; }
     dd { margin: 0; }
