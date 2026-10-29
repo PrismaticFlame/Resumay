@@ -17,6 +17,10 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
+// ---------------------------
+// APPLICATIONS
+// ---------------------------
+
 #[tauri::command]
 fn add_application(state: tauri::State<DbState>, company: &str, position: &str, website: Option<&str>, job_description: Option<&str>, username: Option<&str>, status: &str, 
                     resume: Option<i32>, notes: Option<&str>, refer: Option<&str>, apply_date: &str, password: Option<&str>) -> Result<i32, String> {
@@ -58,6 +62,43 @@ fn update_application(state: tauri::State<DbState>, id: i32, company: &str, posi
     }
     Ok(updated)
 }
+
+// ---------------------------
+// RESUMES
+// ---------------------------
+
+#[tauri::command]
+fn add_resume(state: tauri::State<DbState>, label: &str, pdf: Vec<u8>, latex_source: Option<&str>) -> Result<i32, String> {
+    let id = {
+        let conn = state.0.lock().map_err(|e| e.to_string())?;
+        db::add_resumes(&conn, label, &pdf, latex_source).map_err(|e| e.to_string())?
+    };
+    Ok(id)
+}
+
+#[tauri::command]
+fn list_resumes(state: tauri::State<DbState>) -> Result<Vec<db::Resume>, String> {
+    let conn = state.0.lock().map_err(|e| e.to_string())?;
+    db::list_resumes(&conn).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn fetch_resume(state: tauri::State<DbState>, id: i32) -> Result<Vec<u8>, String> {
+    let conn = state.0.lock().map_err(|e| e.to_string())?;
+    let resume: Vec<u8> = db::fetch_resume(&conn, id).map_err(|e| e.to_string())?;
+
+    return Ok(resume)
+}
+
+#[tauri::command]
+fn delete_resume(state: tauri::State<DbState>, id: i32) -> Result<(), String> {
+    let _del = {
+        let conn = state.0.lock().map_err(|e| e.to_string())?;
+        db::delete_resume(&conn, id).map_err(|e| e.to_string())?;
+    };
+    Ok(())
+}
+
 
 #[tauri::command]
 async fn compile_resume(app: AppHandle, tex: String) -> Result<Vec<u8>, String> {
@@ -104,6 +145,10 @@ pub fn run() {
             list_applications,
             delete_application,
             update_application,
+            add_resume,
+            list_resumes,
+            fetch_resume,
+            delete_resume,
             credentials::save_credential,
             credentials::get_credential,
             credentials::delete_credential,
