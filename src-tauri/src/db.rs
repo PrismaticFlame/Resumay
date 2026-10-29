@@ -148,3 +148,8 @@ pub fn fetch_resume(conn: &Connection, id: i32) -> Result<Vec<u8>> {
         |row| row.get::<_, Vec<u8>>(0),
     )
 }
+
+pub fn delete_resume(conn: &Connection, id: i32) -> Result<(), String> {
+    conn.execute("DELETE FROM resumes WHERE id = ?1", [id]).map_err(|e| e.to_string())?;
+    Ok(())
+}
