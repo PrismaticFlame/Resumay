@@ -1,4 +1,14 @@
-use rusqlite::{params, Connection, Result};
+use rusqlite::{Connection, Result, params};
+
+pub fn init(conn: &Connection) -> Result<()> {
+    conn.execute_batch("PRAGMA foreign_keys = ON;")?;
+    conn.execute_batch(include_str!("schema.sql"))?;
+    Ok(())
+}
+
+// ----------------------------------------------
+// APPLICATIONS
+// ----------------------------------------------
 
 #[derive(Debug, serde::Serialize)]
 pub struct Application {
@@ -13,12 +23,6 @@ pub struct Application {
     notes: Option<String>,
     refer: Option<String>,
     apply_date: String,
-}
-
-pub fn init(conn: &Connection) -> Result<()> {
-    conn.execute_batch("PRAGMA foreign_keys = ON;")?;
-    conn.execute_batch(include_str!("schema.sql"))?;
-    Ok(())
 }
 
 pub fn add_application(conn: &Connection, 
@@ -94,4 +98,53 @@ pub fn update_application(conn: &Connection,
 pub fn delete_application(conn: &Connection, id: i32) -> Result<(), String> {
     conn.execute("DELETE FROM applications WHERE id = ?1", [id]).map_err(|e| e.to_string())?;
     Ok(())
+}
+
+
+// ----------------------------------------------
+// RESUMES
+// ----------------------------------------------
+#[derive(Debug, serde::Serialize)]
+pub struct Resume {
+    id: i32,
+    label: String,
+    created_at: Option<String>,
+}
+
+pub fn add_resumes(conn: &Connection,
+                    label: &str,
+                    pdf: &[u8],
+                    latex_source: Option<&str>) -> Result<i32> {
+    conn.execute(
+        "INSERT INTO resumes (label, pdf, latex_source)
+        VALUES (?1, ?2, ?3)",
+        params![label, pdf, latex_source]
+    )?;
+
+    return Ok(conn.last_insert_rowid().try_into().unwrap())
+}
+
+pub fn list_resumes(conn: &Connection) -> Result<Vec<Resume>, rusqlite::Error> {
+    let mut stmt = conn.prepare(
+        "SELECT id, label, created_at FROM resumes"
+    )?;
+    let resume_finder = stmt.query_map([], |row| {
+        Ok(Resume {
+            id: row.get::<_, i32>(0)?,
+            label: row.get::<_, String>(1)?,
+            created_at: row.get::<_, Option<String>>(2)?,
+        })
+    })?;
+
+    let resume_list: Vec<Resume> = resume_finder.collect::<Result<Vec<_>,_>>()?;
+
+    Ok(resume_list)
+}
+
+pub fn fetch_resume(conn: &Connection, id: i32) -> Result<Vec<u8>> {
+    conn.query_row(
+        "SELECT pdf FROM resumes WHERE id = ?1",
+        [id],
+        |row| row.get::<_, Vec<u8>>(0),
+    )
 }

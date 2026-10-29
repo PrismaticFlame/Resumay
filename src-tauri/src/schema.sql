@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS resumes (
     id INTEGER PRIMARY KEY,
     label TEXT NOT NULL,
-    pdf TEXT NOT NULL,
-    latex_source TEXT NOT NULL,
+    pdf BLOB NOT NULL,
+    latex_source TEXT,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 

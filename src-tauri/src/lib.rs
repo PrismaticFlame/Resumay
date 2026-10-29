@@ -77,25 +77,25 @@ pub fn run() {
             app.manage(DbState(Mutex::new(conn)));
             let store = dbus_secret_service_keyring_store::Store::new().map_err(|e| format!("create store: {e}"))?;
             set_default_store(store);
-            tauri::async_runtime::spawn(async move {
-                let body = serde_json::json!({
-                    "model": "llama3.2:3b",
-                    "prompt": "Say hello in five words.",
-                    "stream": false,
-                });
-                let client = reqwest::Client::new();
-                let res = client.post("http://localhost:11434/api/generate")
-                    .json(&body)
-                    .send()
-                    .await;
-                match res {
-                    Ok(r) => {
-                        let v: serde_json::Value = r.json().await.unwrap();
-                        println!("{}", v["response"]);
-                    }
-                    Err(e) => eprintln!("ollama request failed: {e}"),
-                }
-            });
+            // tauri::async_runtime::spawn(async move {
+            //     let body = serde_json::json!({
+            //         "model": "llama3.2:3b",
+            //         "prompt": "Say hello in five words.",
+            //         "stream": false,
+            //     });
+            //     let client = reqwest::Client::new();
+            //     let res = client.post("http://localhost:11434/api/generate")
+            //         .json(&body)
+            //         .send()
+            //         .await;
+            //     match res {
+            //         Ok(r) => {
+            //             let v: serde_json::Value = r.json().await.unwrap();
+            //             println!("{}", v["response"]);
+            //         }
+            //         Err(e) => eprintln!("ollama request failed: {e}"),
+            //     }
+            // });
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
