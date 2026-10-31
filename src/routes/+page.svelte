@@ -2,6 +2,7 @@
   // import { event } from "@tauri-apps/api";
   import { invoke } from "@tauri-apps/api/core";
   import { onMount } from 'svelte';
+  import type { Application, Resume } from "$lib/types";
   import { STATUS } from "$lib/status";
 
   import Rail from "$lib/component/Rail.svelte";
@@ -23,8 +24,16 @@
     apply_date: string;
   }
 
-  onMount(() => {
-    listApplications()
+  interface Resume {
+    id: number;
+    label: string;
+    created_at: string;
+    uses: number;
+  }
+
+  onMount(async () => {
+    listApplications();
+    listResumes();
   });
 
   let filter = $state("all");
@@ -34,10 +43,10 @@
   let editing = $state<Application | null>(null);
 
   let name = $state("");
-  let greetMsg = $state("");
 
   let message = $state("");
   let applications = $state<Application[]>([]);
+  let resumes = $state<Resume[]>([]);
 
   let visible = $derived(applications.filter(a =>
   (filter === "all" || a.status === filter) &&
@@ -88,6 +97,14 @@
     editing = null;
   }
 
+  async function listResumes() {
+    try {
+      resumes = await invoke<Resume[]>("list_resumes");
+    } catch (err) {
+      message = `Error: ${err}`;
+    }
+  }
+
 </script>
 
 <!-- <main class="container">
@@ -132,7 +149,7 @@
   </main> -->
 
 <div class="shell">
-  <Rail count={applications.length}/>
+  <Rail count={applications.length} resumeCount={resumes.length}/>
   <main>
     <header>
       <div>

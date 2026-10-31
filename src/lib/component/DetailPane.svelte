@@ -24,7 +24,8 @@
     <p class="job_descrip">{app.job_description ?? ""}</p>
 
     <h3>Referral</h3><p>{app.refer ?? "—"}</p>
-    <h3>Notes</h3><p>{app.notes ?? "—"}</p>
+    <h3>Notes</h3>
+    <p class="notes">{app.notes ?? "—"}</p>
 </div>
 
 <div class="danger">
@@ -47,7 +48,21 @@
         white-space: pre-wrap;
         overflow-wrap: anywhere;
         max-height: 300px;
-        overflow-y: auto; }
+        overflow-y: auto; 
+        border: 1px solid #333333;
+        padding: 10px;
+        border-radius: 10px;
+        outline: none;}
+    .notes {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #333333;
+        padding: 10px;
+        border-radius: 10px;
+        outline: none;
+    }
     dl { display: grid; grid-template-columns: 96px 1fr; gap: 8px 12px; margin: 0; }
     dt { color: var(--muted); font-size: 13px; }
     dd { margin: 0; }

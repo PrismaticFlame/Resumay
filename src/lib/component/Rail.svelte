@@ -1,7 +1,7 @@
 <script lang="ts">
     import logo from "$lib/assets/resumay-logo.svg"
 
-    let { count } = $props();
+    let { count, resumeCount } = $props();
 </script>
 
 <nav>
@@ -12,7 +12,10 @@
         <span>Applications</span>
         <span class="count">{count}</span>
     </button>
-    <button class="item">Resumes</button>
+    <button class="item on">
+        <span>Resumes</span>
+        <span class="count">{resumeCount}</span>
+    </button>
     <button class="item">Tailor</button>
 </nav>
 
