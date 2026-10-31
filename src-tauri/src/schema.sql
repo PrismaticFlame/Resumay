@@ -35,3 +35,5 @@ CREATE TABLE IF NOT EXISTS bullets (
     text TEXT NOT NULL,
     sort_order INTEGER DEFAULT 0
 );
+
+CREATE INDEX IF NOT EXISTS idx_applications_resume ON applications(resume);

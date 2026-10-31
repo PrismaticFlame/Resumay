@@ -109,6 +109,7 @@ pub struct Resume {
     id: i32,
     label: String,
     created_at: Option<String>,
+    uses: i64,
 }
 
 pub fn add_resumes(conn: &Connection,
@@ -126,13 +127,17 @@ pub fn add_resumes(conn: &Connection,
 
 pub fn list_resumes(conn: &Connection) -> Result<Vec<Resume>, rusqlite::Error> {
     let mut stmt = conn.prepare(
-        "SELECT id, label, created_at FROM resumes"
+        "SELECT r.id, r.label, r.created_at, COUNT(a.id) AS uses
+            FROM resumes r
+            LEFT JOIN applications a ON a.resume = r.id
+            GROUP BY r.id"
     )?;
     let resume_finder = stmt.query_map([], |row| {
         Ok(Resume {
             id: row.get::<_, i32>(0)?,
             label: row.get::<_, String>(1)?,
             created_at: row.get::<_, Option<String>>(2)?,
+            uses: row.get::<_, i64>(3)?,
         })
     })?;
 
