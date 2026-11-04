@@ -6,3 +6,8 @@ export const STATUS = {
     rejected:     { label: "Rejected",     fg: "#374151", bg: "#E5E7EB" },
 };
 export const FALLBACK = { label: "", fg: "#374151", bg: "#E5E7EB"}
+
+export const USES = {
+    used:    { label: "Used",   fg: "#115E59", bg: "#CCFBF1" },
+    unused:  { label: "Unused", fg: "#374151", bg: "#E5E7EB" },
+}

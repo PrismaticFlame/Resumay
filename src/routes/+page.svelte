@@ -140,25 +140,25 @@
 <style>
   
   .shell { display: grid; grid-template-columns: 224px 1fr; height: 100vh; }
-main { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
-header { display: flex; align-items: center; gap: 16px; padding: 22px 28px 14px; }
-header div { flex: 1; }
-h1 { margin: 0; font-size: 24px; font-weight: 600; }
-.sub { color: var(--muted); font-size: 13px; }
-input[type="search"] { width: 300px; min-height: 44px; padding: 0 12px;
-  border: 1px solid #D1D5DB; border-radius: 8px; background: var(--surface); }
-.primary { min-height: 44px; padding: 0 18px; border: none; border-radius: 8px;
-  background: var(--accent); color: #fff; font-weight: 600; cursor: pointer; }
+  main { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+  header { display: flex; align-items: center; gap: 16px; padding: 22px 28px 14px; }
+  header div { flex: 1; }
+  h1 { margin: 0; font-size: 24px; font-weight: 600; }
+  .sub { color: var(--muted); font-size: 13px; }
+  input[type="search"] { width: 300px; min-height: 44px; padding: 0 12px;
+    border: 1px solid #D1D5DB; border-radius: 8px; background: var(--surface); }
+  .primary { min-height: 44px; padding: 0 18px; border: none; border-radius: 8px;
+    background: var(--accent); color: #fff; font-weight: 600; cursor: pointer; }
 
-.chips { display: flex; gap: 8px; padding: 0 28px 16px; }
-.chip { min-height: 40px; padding: 0 14px; border-radius: 999px; cursor: pointer;
-  border: 1px solid #D1D5DB; background: var(--surface); text-transform: capitalize; }
-.chip.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .chips { display: flex; gap: 8px; padding: 0 28px 16px; }
+  .chip { min-height: 40px; padding: 0 14px; border-radius: 999px; cursor: pointer;
+    border: 1px solid #D1D5DB; background: var(--surface); text-transform: capitalize; }
+  .chip.on { background: var(--ink); border-color: var(--ink); color: #fff; }
 
-.work { display: grid; grid-template-columns: 1fr 420px; gap: 20px;
-  flex: 1; min-height: 0; padding: 0 28px 28px; }
-.work > div { background: var(--surface); border: 1px solid var(--line);
-  border-radius: 12px; overflow: auto; }
+  .work { display: grid; grid-template-columns: 1fr 420px; gap: 20px;
+    flex: 1; min-height: 0; padding: 0 28px 28px; }
+  .work > div { background: var(--surface); border: 1px solid var(--line);
+    border-radius: 12px; overflow: auto; }
 
 </style>
 

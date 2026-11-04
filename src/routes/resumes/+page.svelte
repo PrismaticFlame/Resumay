@@ -2,30 +2,21 @@
     import { invoke } from "@tauri-apps/api/core";
     import { onMount } from 'svelte';
     import type { Application, Resume } from "$lib/types";
-    import { STATUS } from "$lib/status";
+    import { USES } from "$lib/status";
 
     import Rail from "$lib/component/Rail.svelte";
     import DetailPane from "$lib/component/DetailPane.svelte";
     import ResumeList from "$lib/component/ResumeList.svelte"
 
-    let applications = $state<Application[]>([]);
     let resumes = $state<Resume[]>([]);
 
     let query = $state("");
-    let filter = $state<"all" | "unused" | "used">("all");
+    let filter = $state("all");
     let previewUrl = $state("");
 
     let rSelectedId = $state<number | null>(null);
-    let showModal = $state(false);
-    let editing = $state<Application | null>(null);
-
-    let name = $state("");
 
     let message = $state("");
-
-    let latexSource = $state("");
-    let compileError = $state("");
-    let pdfBlobUrl = $state("");
 
     let visible = $derived(resumes.filter(r =>
         r.label.toLowerCase().includes(query.toLowerCase()) &&
@@ -64,7 +55,14 @@
         {/if}
       </div>
       <input type="search" placeholder="Search resumes" bind:value={query} />
+      <!-- Button for new Resumes here -->
     </header>
+
+    <div class="chips">
+      {#each ["all", ...Object.keys(USES)] as f}
+        <button class="chip" class:on={filter === f} onclick={() => filter = f}>{f}</button>
+      {/each}
+    </div>
 
     <div class="work">
       <div><ResumeList resume={visible} rSelectedId={rSelected?.id} onselect={(id: number) => { rSelectedId = id; previewUrl = ""; }} /></div>
@@ -84,6 +82,7 @@
 </div>
 
 <style>
+
   .shell { display: grid; grid-template-columns: 224px 1fr; height: 100vh; }
   main { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
   header { display: flex; align-items: center; gap: 16px; padding: 22px 28px 14px; }
@@ -92,4 +91,17 @@
   .sub { color: var(--muted); font-size: 13px; }
   input[type="search"] { width: 300px; min-height: 44px; padding: 0 12px;
     border: 1px solid #D1D5DB; border-radius: 8px; background: var(--surface); }
+  .primary { min-height: 44px; padding: 0 18px; border: none; border-radius: 8px;
+    background: var(--accent); color: #fff; font-weight: 600; cursor: pointer; }
+
+  .chips { display: flex; gap: 8px; padding: 0 28px 16px; }
+  .chip { min-height: 40px; padding: 0 14px; border-radius: 999px; cursor: pointer;
+    border: 1px solid #D1D5DB; background: var(--surface); text-transform: capitalize; }
+  .chip.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+  .work { display: grid; grid-template-columns: 1fr 420px; gap: 20px;
+    flex: 1; min-height: 0; padding: 0 28px 28px; }
+  .work > div { background: var(--surface); border: 1px solid var(--line);
+    border-radius: 12px; overflow: auto; }
+    
 </style>
