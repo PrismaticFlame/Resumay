@@ -33,7 +33,6 @@
 
   onMount(async () => {
     listApplications();
-    listResumes();
   });
 
   let filter = $state("all");
@@ -41,8 +40,6 @@
   let selectedId = $state<number | null>(null);
   let showModal = $state(false);
   let editing = $state<Application | null>(null);
-
-  let name = $state("");
 
   let message = $state("");
   let applications = $state<Application[]>([]);
@@ -97,56 +94,7 @@
     editing = null;
   }
 
-  async function listResumes() {
-    try {
-      resumes = await invoke<Resume[]>("list_resumes");
-    } catch (err) {
-      message = `Error: ${err}`;
-    }
-  }
-
 </script>
-
-<!-- <main class="container">
-  <h1>Resumay</h1>
-
-  <form id="appliform" class="greet" onsubmit={addApplication}>
-    <input id="company" placeholder="Company name..." bind:value={company} />
-    <input id="position" placeholder="Position..." bind:value={position} />
-    <input id="website" placeholder="Website URL..." bind:value={website} />
-    <input id="applyDate" type="date" bind:value={applyDate} />
-    <input id="status" placeholder="Status of Application" bind:value={status} />
-    <textarea id="notes" placeholder="Notes..." bind:value={notes}></textarea>
-    <input id="refer" placeholder="Referral..." bind:value={refer} />
-    <input id="username" placeholder="Username..." bind:value={username} />
-    <input id="password" placeholder="Password..." type="password" bind:value={password} />
-    <button type="submit">Add Application</button>
-  </form>
-  <p>{message}</p>
-
-  <AppList apps={visible} selectedId={selectedId?.id} onselect={(id) => selectedId = id} />
-
-  <ul>
-    {#each applications as appli (appli.id)}
-    <li>{appli.company}, {appli.position}, {appli.apply_date}, {appli.status}</li>
-    {/each}
-  </ul>
-
-  <textarea
-    bind:value={latexSource}
-    rows = "12"
-    placeholder="LaTeX Source here..."
-  ></textarea>
-
-  <button onclick={compileLatex}>Compile latex</button>
-
-  {#if compileError}
-    <pre class="error">{compileError}</pre>
-  {/if}
-  {#if pdfBlobUrl}
-    <iframe title="pdf" src={pdfBlobUrl} width="100%" height="600"></iframe>
-  {/if}
-  </main> -->
 
 <div class="shell">
   <Rail count={applications.length} resumeCount={resumes.length}/>
