@@ -100,6 +100,14 @@ pub fn delete_application(conn: &Connection, id: i32) -> Result<(), String> {
     Ok(())
 }
 
+pub fn count_applications(conn: &Connection) -> Result<i32, String> {
+    let count = conn.query_row(
+        "SELECT COUNT(*) FROM applications",
+         [], |row| row.get::<_, i32>(0))
+         .map_err(|e| e.to_string())?;
+    Ok(count)
+}
+
 
 // ----------------------------------------------
 // RESUMES
@@ -155,6 +163,19 @@ pub fn fetch_resume(conn: &Connection, id: i32) -> Result<Vec<u8>> {
 }
 
 pub fn delete_resume(conn: &Connection, id: i32) -> Result<(), String> {
-    conn.execute("DELETE FROM resumes WHERE id = ?1", [id]).map_err(|e| e.to_string())?;
+    conn.execute(
+        "DELETE FROM resumes WHERE id = ?1", 
+        [id]).
+        map_err(|e| e.to_string())?;
     Ok(())
+}
+
+pub fn count_resumes(conn: &Connection) -> Result<i32, String> {
+    let count = 
+        conn.query_row(
+            "SELECT COUNT(*) FROM resumes",
+             [],
+              |row| row.get::<_, i32>(0))
+              .map_err(|e| e.to_string())?;
+    Ok(count)
 }

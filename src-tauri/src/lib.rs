@@ -63,6 +63,15 @@ fn update_application(state: tauri::State<DbState>, id: i32, company: &str, posi
     Ok(updated)
 }
 
+#[tauri::command]
+fn count_applications(state: tauri::State<DbState>) -> Result<i32, String> {
+    let count = {
+        let conn = state.0.lock().map_err(|e| e.to_string())?;
+        db::count_applications(&conn).map_err(|e| e.to_string())?
+    };
+    Ok(count)
+}
+
 // ---------------------------
 // RESUMES
 // ---------------------------
@@ -97,6 +106,15 @@ fn delete_resume(state: tauri::State<DbState>, id: i32) -> Result<(), String> {
         db::delete_resume(&conn, id).map_err(|e| e.to_string())?;
     };
     Ok(())
+}
+
+#[tauri::command]
+fn count_resumes(state: tauri::State<DbState>) -> Result<i32, String> {
+    let count = {
+        let conn = state.0.lock().map_err(|e| e.to_string())?;
+        db::count_resumes(&conn).map_err(|e| e.to_string())?
+    };
+    Ok(count)
 }
 
 
@@ -145,10 +163,12 @@ pub fn run() {
             list_applications,
             delete_application,
             update_application,
+            count_applications,
             add_resume,
             list_resumes,
             fetch_resume,
             delete_resume,
+            count_resumes,
             credentials::save_credential,
             credentials::get_credential,
             credentials::delete_credential,

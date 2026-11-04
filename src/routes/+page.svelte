@@ -97,7 +97,7 @@
 </script>
 
 <div class="shell">
-  <Rail count={applications.length} resumeCount={resumes.length}/>
+  <Rail />
   <main>
     <header>
       <div>

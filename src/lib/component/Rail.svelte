@@ -1,8 +1,8 @@
 <script lang="ts">
     import logo from "$lib/assets/resumay-logo.svg"
     import { page } from "$app/state";
-
-    let { count, resumeCount } = $props();
+    
+    import { counts } from "$lib/counts.svelte";
 </script>
 
 <nav>
@@ -11,11 +11,11 @@
     </div>
     <a href="/" class="item" class:on={page.url.pathname === "/"}>
         <span>Applications</span>
-        <span class="count">{count}</span>
+        <span class="count">{counts.applications}</span>
     </a>
     <a href="/resumes" class="item" class:on={page.url.pathname === "/resumes"}>
         <span>Resumes</span>
-        <span class="count">{resumeCount}</span>
+        <span class="count">{counts.resumes}</span>
     </a>
     <button class="item">Tailor</button>
 </nav>
