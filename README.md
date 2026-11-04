@@ -11,7 +11,7 @@
 [![LaTeX](https://img.shields.io/badge/LaTeX-00A0A0?logo=latex&logoColor=fff)](https://www.latex-project.org/)
 [![Tectonic](https://img.shields.io/badge/Tectonic-sidecar-green?logo=latex)](https://tectonic-typesetting.github.io/)
 [![Tauri](https://img.shields.io/badge/Tauri-24C8D8?logo=tauri&logoColor=fff)](https://v2.tauri.app/)
-[![Ollama](https://img.shields.io/badge/Ollama-fff?logo=ollama&logoColor=000)](https://ollama.com/)
+<!-- [![Ollama](https://img.shields.io/badge/Ollama-fff?logo=ollama&logoColor=000)](https://ollama.com/) -->
 
 </div>
 
