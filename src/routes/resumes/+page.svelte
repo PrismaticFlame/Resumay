@@ -6,6 +6,7 @@
 
     import Rail from "$lib/component/Rail.svelte";
     import DetailPane from "$lib/component/DetailPane.svelte";
+    import ResumeDetailPane from "$lib/component/ResumeDetailPane.svelte";
     import ResumeList from "$lib/component/ResumeList.svelte"
 
     let resumes = $state<Resume[]>([]);
@@ -69,11 +70,12 @@
       <div>
         {#if rSelected}
           {#key rSelected.id}
-            <h2>{rSelected.label}</h2>
+            <ResumeDetailPane resume={rSelected} />
+            <!-- <h2>{rSelected.label}</h2>
             <button onclick={() => showResume(rSelected.id)}>View PDF</button>
             {#if previewUrl}
               <iframe title="Resume preview" src={previewUrl}></iframe>
-            {/if}
+            {/if} -->
           {/key}
         {/if}
       </div>
