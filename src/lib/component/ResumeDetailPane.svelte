@@ -3,12 +3,14 @@
     import { invoke } from "@tauri-apps/api/core";
     import { onDestroy, onMount } from "svelte";
 
-    let { resume } = $props();
+    let { resume, ondelete } = $props();
     // let confirming = $state(false);
     // let editing = $state(false);
 
     let message = $state("");
     let previewUrl = $state("");
+
+    let confirming = $state(false);
 
     async function showResume(id: number) {
       message = "";
@@ -37,6 +39,21 @@
     <p class="role">{timeFormat(resume.created_at)}</p>
 
     <h3>Applications Using This Resume:</h3>
+
+    <div class="danger">
+      {#if resume.uses > 0}
+        <span class="locked">
+          <b>Used by {resume.uses} application{resume.uses === 1 ? "" : "s"}, so it can't be deleted.</b>
+        </span>
+      {:else if confirming}
+        <span>Delete this Resume?</span>
+        <button class="del" onclick={ondelete}>Yes, delete</button>
+        <button onclick={() => confirming = false}>Cancel</button>
+      {:else}
+        <button class="del-ghost" onclick={() => confirming = true}>Delete</button>
+      {/if}
+    </div>
+
   </div>
 
   <div class="viewer">

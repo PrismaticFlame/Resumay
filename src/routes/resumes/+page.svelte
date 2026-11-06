@@ -43,6 +43,17 @@
         message = String(err);
       }
     }
+
+    async function deleteResume(id: number) {
+      message = "";
+      try {
+        await invoke("delete_resume", { id });
+        rSelectedId = null;
+        await load();
+      } catch (err) {
+        message = String(err);
+      }
+    }
 </script>
 
 <div class="shell">
@@ -69,7 +80,7 @@
       <div>
         {#if rSelected}
           {#key rSelected.id}
-            <ResumeDetailPane resume={rSelected} />
+            <ResumeDetailPane resume={rSelected} ondelete={() => deleteResume(rSelected.id)}/>
           {/key}
         {/if}
       </div>

@@ -163,10 +163,14 @@ pub fn fetch_resume(conn: &Connection, id: i32) -> Result<Vec<u8>> {
 }
 
 pub fn delete_resume(conn: &Connection, id: i32) -> Result<(), String> {
-    conn.execute(
-        "DELETE FROM resumes WHERE id = ?1", 
+    let changed = conn.execute(
+        "DELETE FROM resumes WHERE id = ?1
+        AND NOT EXISTS (SELECT 1 FROM applications WHERE resume = ?1)", 
         [id]).
         map_err(|e| e.to_string())?;
+    if changed == 0 {
+        return Err("Resume is still attached to an application".to_string());
+    }
     Ok(())
 }
 
