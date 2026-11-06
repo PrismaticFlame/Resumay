@@ -117,6 +117,15 @@ fn count_resumes(state: tauri::State<DbState>) -> Result<i32, String> {
     Ok(count)
 }
 
+#[tauri::command]
+fn fetch_application_summary(state: tauri::State<DbState>, id: i32) -> Result<Vec<db::ApplicationSummary>, String> {
+    let appli_summary = {
+        let conn = state.0.lock().map_err(|e| e.to_string())?;
+        db::fetch_application_summary(&conn, id).map_err(|e| e.to_string())?
+    };
+    Ok(appli_summary)
+}
+
 
 #[tauri::command]
 async fn compile_resume(app: AppHandle, tex: String) -> Result<Vec<u8>, String> {
@@ -164,6 +173,7 @@ pub fn run() {
             delete_application,
             update_application,
             count_applications,
+            fetch_application_summary,
             add_resume,
             list_resumes,
             fetch_resume,

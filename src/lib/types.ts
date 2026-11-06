@@ -20,3 +20,11 @@ export interface Resume {
     created_at: string;
     uses: number;
   }
+
+export interface ApplicationSummary {
+  id: number;
+  company: string;
+  position: string;
+  status: string;
+  apply_date: string;
+}

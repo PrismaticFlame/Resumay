@@ -120,6 +120,15 @@ pub struct Resume {
     uses: i64,
 }
 
+#[derive(Debug, serde::Serialize)]
+pub struct ApplicationSummary {
+    id: i32,
+    company: String,
+    position: String,
+    status: String,
+    apply_date: String,
+}
+
 pub fn add_resumes(conn: &Connection,
                     label: &str,
                     pdf: &[u8],
@@ -182,4 +191,26 @@ pub fn count_resumes(conn: &Connection) -> Result<i32, String> {
               |row| row.get::<_, i32>(0))
               .map_err(|e| e.to_string())?;
     Ok(count)
+}
+
+pub fn fetch_application_summary(conn: &Connection, resume_id: i32) -> Result<Vec<ApplicationSummary>, rusqlite::Error> {
+    let mut stmt = conn.prepare(
+        "SELECT id, company, position, status, apply_date
+        FROM applications
+        WHERE resume = ?1
+        ORDER BY apply_date DESC"
+    )?;
+    let applis = stmt.query_map([resume_id], |row| {
+        Ok(ApplicationSummary {
+            id: row.get::<_, i32>(0)?,
+            company: row.get::<_, String>(1)?,
+            position: row.get::<_, String>(2)?,
+            status: row.get::<_, String>(3)?,
+            apply_date: row.get::<_, String>(4)?,
+        })
+    })?;
+
+    let application_summary_list: Vec<ApplicationSummary> = applis.collect::<Result<Vec<_>,_>>()?;
+
+    Ok(application_summary_list)
 }
