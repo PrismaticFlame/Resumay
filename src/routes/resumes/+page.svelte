@@ -66,19 +66,14 @@
     </div>
 
     <div class="work">
-      <div><ResumeList resume={visible} rSelectedId={rSelected?.id} onselect={(id: number) => { rSelectedId = id; previewUrl = ""; }} /></div>
       <div>
         {#if rSelected}
           {#key rSelected.id}
             <ResumeDetailPane resume={rSelected} />
-            <!-- <h2>{rSelected.label}</h2>
-            <button onclick={() => showResume(rSelected.id)}>View PDF</button>
-            {#if previewUrl}
-              <iframe title="Resume preview" src={previewUrl}></iframe>
-            {/if} -->
           {/key}
         {/if}
       </div>
+      <div><ResumeList resume={visible} rSelectedId={rSelected?.id} onselect={(id: number) => { rSelectedId = id; previewUrl = ""; }} /></div>
     </div>
   </main>
 </div>

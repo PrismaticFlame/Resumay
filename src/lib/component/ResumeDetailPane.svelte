@@ -1,7 +1,7 @@
 <script lang="ts">
     import { timeFormat } from "$lib/time-format";
     import { invoke } from "@tauri-apps/api/core";
-    import { onDestroy } from "svelte";
+    import { onDestroy, onMount } from "svelte";
 
     let { resume } = $props();
     // let confirming = $state(false);
@@ -25,28 +25,37 @@
     }
 
     onDestroy(() => { if (previewUrl) URL.revokeObjectURL(previewUrl); });
+    onMount(() => showResume(resume.id));
 </script>
 
 <div class="pane">
-
+  
+  <div class="info">
     <h2>{resume.label}</h2>
     <p class="role">Number of uses in Applications: {resume.uses}</p>
     <h2>Date Created</h2>
     <p class="role">{timeFormat(resume.created_at)}</p>
 
-    <h3>Uses</h3>
+    <h3>Applications Using This Resume:</h3>
+  </div>
 
+  <div class="viewer">
     <h2>Resume</h2>
-    <button class="view" onclick={() => showResume(resume.id)}>View PDF</button>
+    <!-- <button class="view" onclick={() => showResume(resume.id)}>View PDF</button> -->
     {#if message}<p class="error">{message}</p>{/if}
     {#if previewUrl}
         <iframe title="Resume preview" src={previewUrl}></iframe>
     {/if}
+  </div>
 
 </div>
 
 <style>
-    .pane { padding: 24px; }
+    .pane { display: grid; grid-template-columns: 500px 1fr; gap: 24px;
+        height: 100%; padding: 24px; box-sizing: border-box; }
+    .info { min-height: 0; overflow-y: auto; }
+    .viewer { min-height: 0; }
+    iframe { width: 100%; height: 100%; border: 0; }
     h2 { margin: 10px 0 2px; font-size: 22px; font-weight: 600; }
     .role { margin: 0 0 20px; }
     .display { min-height: 44px; padding: 0 18px; border: none; border-radius: 8px;
@@ -75,5 +84,5 @@
                     border: 1px solid #D1D5DB; background: #fff; cursor: pointer; }
     .del { background: #B91C1C !important; border-color: #B91C1C !important; color: #fff; }
     .del-ghost { color: #B91C1C; }
-    iframe { width: 100%; height: 600px; border: 0; }
+    
 </style>
