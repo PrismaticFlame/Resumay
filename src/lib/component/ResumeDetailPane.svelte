@@ -79,7 +79,7 @@
     <!-- <button class="view" onclick={() => showResume(resume.id)}>View PDF</button> -->
     {#if message}<p class="error">{message}</p>{/if}
     {#if previewUrl}
-        <iframe title="Resume preview" src={previewUrl}></iframe>
+        <iframe title="Resume preview" src="{previewUrl}#toolbar=0&navpanes=0"></iframe>
     {/if}
   </div>
 
@@ -89,8 +89,8 @@
   .pane { display: grid; grid-template-columns: 500px 1fr; gap: 24px;
       height: 100%; padding: 24px; box-sizing: border-box; }
   .info { min-height: 0; overflow-y: auto; }
-  .viewer { min-height: 0; }
-  iframe { width: 100%; height: 100%; border: 0; }
+  .viewer { min-height: 0; overflow: hidden; }
+  iframe { width: 100%; height: calc(100% + 56px); margin-top: -83px; border: none; }
   h2 { margin: 10px 0 2px; font-size: 22px; font-weight: 600; }
   .role { margin: 0 0 20px; }
   h3 { margin: 20px 0 8px; font-size: 12px; font-weight: 600; color: var(--muted);
