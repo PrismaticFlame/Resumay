@@ -1,13 +1,20 @@
 <script lang="ts">
     import { invoke } from "@tauri-apps/api/core";
     import { STATUS } from "$lib/status";
+    import { onMount } from "svelte";
+    import type { Resume } from "$lib/types";
+    import { timeFormat } from "$lib/time-format";
+    import Page from "../../routes/+page.svelte";
 
     let { onclose, onsaved, app = null } = $props();
 
     let dragging = $state(false);
     let resumeFile = $state<File | null>(null);
     let resumeId = $state<number | null>(app?.resume ?? null);
-    let resumeError = $state("");
+    let previewUrl = $state("");
+    let fileInput = $state<HTMLInputElement | null>(null);
+
+    let resumes = $state<Resume[]>([]);
 
     let company = $state(app?.company ?? "");
     let position = $state(app?.position ?? "");
@@ -27,7 +34,6 @@
         try {
 
           let resume = resumeId;
-          console.log("resumeFile at submit:", resumeFile);
           if (resumeFile) resume = await uploadResume(resumeFile);
 
           if (app) {
@@ -54,6 +60,48 @@
       const pdf = Array.from(new Uint8Array(await file.arrayBuffer()));
       return await invoke<number>("add_resume", { label: file.name, pdf });
     }
+
+    function clearFile() {
+      resumeFile = null;
+      if (fileInput) fileInput.value = "";
+    }
+
+    $effect(() => {
+      const file = resumeFile;
+      const id = resumeId;
+      let url = "";
+      let cancelled = false;
+
+      if (file) {
+        url = URL.createObjectURL(file);
+        previewUrl = url;
+      } else if (id !== null) {
+        try {
+          (async () => {
+          const bytes = await invoke<number[]>("fetch_resume", {
+            id
+          });
+          if (cancelled) return;
+          const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
+          if (previewUrl) URL.revokeObjectURL(previewUrl);
+          previewUrl = URL.createObjectURL(blob);
+        })();
+        } catch (err) {
+          if (!cancelled) error = String(error);
+        }        
+      } else {
+        previewUrl = "";
+      }
+
+      return () => {
+        cancelled = true;
+        if (url) URL.revokeObjectURL(url);
+      };
+    });
+
+    onMount(
+      async () => { resumes = await invoke<Resume[]>("list_resumes"); 
+    });
 </script>
 
 <div class="overlay">
@@ -61,23 +109,45 @@
         <h2 id="new-title">{app ? "Edit application" : "New application"}</h2>
 
         <form onsubmit={submit}>
+          <div class="left">
+            <!-- this causes the select and the drag-n-drop to affect each other so that one doesn't override the other -->
+            <select bind:value={resumeId} onchange={clearFile}> 
+                <option value={null}>No resume</option>
+                {#each resumes as r (r.id)}
+                  <option value={r.id}>{r.label} · {timeFormat(r.created_at)}</option>
+                {/each}
+              </select>
 
-          <label class="drop" class:over={dragging}
-            ondragover={(e) => { e.preventDefault(); dragging = true; }}
-            ondragleave={() => dragging = false}
-            ondrop={(e) => {
-              e.preventDefault(); dragging = false;
-              resumeFile = e.dataTransfer?.files[0] ?? null;
-            }}>
-            <input type="file" accept=".pdf" hidden
-             onchange={(e) => resumeFile = e.currentTarget.files?.[0] ?? null} />
-            {#if resumeFile}
-              <b>{resumeFile.name}</b>
-            {:else}
-              <b>Drop your resume here</b>
-              <small>or click to browse · PDF</small>
-            {/if}
-          </label>
+            <label class="drop" class:over={dragging}
+              ondragover={(e) => { e.preventDefault(); dragging = true; }}
+              ondragleave={() => dragging = false}
+              ondrop={(e) => {
+                e.preventDefault(); dragging = false;
+                resumeFile = e.dataTransfer?.files[0] ?? null;
+                resumeId = null;
+              }}>
+              <input type="file" bind:this={fileInput} accept=".pdf" hidden
+              onchange={(e) => {
+                resumeFile = e.currentTarget.files?.[0] ?? null; 
+                resumeId = null;
+              }} />
+              {#if resumeFile}
+                <b>{resumeFile.name}</b>
+              {:else}
+                <b>Drop your resume here</b>
+                <small>or click to browse · PDF</small>
+              {/if}
+            </label>
+
+            <div class="preview">
+              {#if previewUrl}
+                <iframe title="Selected resume" src="{previewUrl}#pagemode=none&zoom=page-fit"></iframe>
+              {:else}
+                <p class="empty">Choose or upload a resume to preview it here</p>
+              {/if}
+            </div>
+
+          </div>
 
           <div class="right">
             <input placeholder="Company *" bind:value={company} required />
@@ -133,4 +203,9 @@
   border: 2px dashed #9CA3AF; border-radius: 12px; background: #fff; cursor: pointer; }
   .drop.over { border-color: var(--accent); background: var(--accent-weak); }
   .drop small { color: var(--muted); }
+  .left { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+  .preview { flex: 1; min-height: 300px; border: 1px solid var(--line); border-radius: 8px;
+            overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .preview iframe { width: 100%; height: 100%; border: 0; }
+  .empty { color: var(--muted); font-size: 13px; text-align: center; padding: 0 16px; }
 </style>
