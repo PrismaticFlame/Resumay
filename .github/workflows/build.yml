@@ -46,6 +46,22 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: './src-tauri -> target'
+
+      - name: Fetch Tectonic sidecar (Linux)
+        if: matrix.os == 'ubuntu-22.04'
+        run: |
+          mkdir -p src-tauri/binaries
+          curl -L "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.17.0/tectonic-0.17.0-aarch64-unknown-linux-musl.tar.gz" | tar -xz -C /tmp
+          mv /tmp/tectonic src-tauri/binaries/tectonic-x86_64-unknown-linux-gnu
+          chmod +x src-tauri/binaries/tectonic-x86_64-unknown-linux-gnu
+      
+      - name: Fetch Tectonic sidecar (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          New-Item -ItemType Directory -Force src-tauri/binaries
+          Invoke-WebRequest "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.17.0/tectonic-0.17.0-x86_64-pc-windows-msvc.zip" -OutFile tectonic.zip
+          Expand-Archive tectonic.zip -DestinationPath tectonic-tmp
+          Move-Item tectonic-tmp/tectonic.exe src-tauri/binaries/tectonic-x86_64-pc-windows-msvc.exe
         
       - name: Build and release
         uses: tauri-apps/tauri-action@v0
