@@ -26,7 +26,7 @@ Resumay is a fast, lightweight desktop app for tracking your job applications.
 You can store information about each application and log the day you applied. 
 
 <div align="center">
-    <img src="static/resumay_application_modal_1.png" height=800px>
+    <img src="static/resumay_v0.1.0_application_modal.png" height=800px>
 </div>
 
 You can divide them into the stages of each application to keep track of your progress as you make your way through the slurry of applications and positions! 
@@ -40,17 +40,17 @@ It certainly isn't easy to keep that excel sheet going much longer...
 Keep track of how many places you've applied just to get a little more down about it! (More features to come!)
 
 <div align="center">
-    <img src="static/resumay_sidebar_1.png">
+    <img src="static/resumay_v0.1.0_rail.png">
 </div>
 
 Check out the details of each application to remind yourself just where you *aren't* getting accepted to!
 
 <div align="center">
-    <img src="static/resumay_detailpane_1.png">
+    <img src="static/resumay_v0.1.0_detail_pane.png">
 </div>
 
 ## WIP
 
-Currently still working on it. In 'Alpha', if you will.
+Version 0.1.0 is released! It is a working Alpha now if you're interested in checking it out.
 
-![Resumay-Version-1](static/resumay_version_1_frontend_reworked_1.png)
+![Resumay-Version-1](static/resumay_v0.1.0_frontend.png)
