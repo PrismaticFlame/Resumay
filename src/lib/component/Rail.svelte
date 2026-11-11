@@ -17,6 +17,9 @@
         <span>Resumes</span>
         <span class="count">{counts.resumes}</span>
     </a>
+    <a href="/edit" class="item" class:on={page.url.pathname === "/edit"}>
+        <span>Edit</span>
+    </a>
     <button class="item">Tailor</button>
 </nav>
 

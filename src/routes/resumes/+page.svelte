@@ -5,7 +5,6 @@
     import { USES } from "$lib/status";
 
     import Rail from "$lib/component/Rail.svelte";
-    import DetailPane from "$lib/component/DetailPane.svelte";
     import ResumeDetailPane from "$lib/component/ResumeDetailPane.svelte";
     import ResumeList from "$lib/component/ResumeList.svelte"
 
