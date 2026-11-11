@@ -143,8 +143,16 @@ pub fn run() {
             let conn = rusqlite::Connection::open(dir.join("resumay.db"))?;
             db::init(&conn)?;
             app.manage(DbState(Mutex::new(conn)));
-            let store = dbus_secret_service_keyring_store::Store::new().map_err(|e| format!("create store: {e}"))?;
-            set_default_store(store);
+            #[cfg(target_os = "linux")]
+            {
+                let store = dbus_secret_service_keyring_store::Store::new().map_err(|e| format!("create store (linux): {e}"))?;
+                set_default_store(store);
+            };
+            #[cfg(target_os = "windows")]
+            {
+                let store = windows_native_keyring_store::Store::new().map_err(|e| format!("create store (windows): {e}"))?;
+                set_default_store(store);
+            };
             // tauri::async_runtime::spawn(async move {
             //     let body = serde_json::json!({
             //         "model": "llama3.2:3b",

@@ -1,8 +1,8 @@
 [package]
 name = "resumay"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "An application and resume tracking app"
+authors = ["PrismaticFlame"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -24,13 +24,19 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 rusqlite = { version = "0.40.2", features = ["bundled"] }
 tauri-plugin-shell = "2.5.0"
-keyring = { version = "4.2.0", features = ["apple-native-keyring-store", 
-                                           "windows-native-keyring-store", 
-                                           "dbus-secret-service-keyring-store"] }
 keyring-core = "1.0.1"
-dbus-secret-service-keyring-store = "1.0.1"
 reqwest = { version = "0.13.5", features = ["json"] }
 
+[target.'cfg(target_os = "linux")'.dependencies]
+keyring = { version = "4.2.0", features = ["dbus-secret-service-keyring-store"]}
+dbus-secret-service-keyring-store = "1.0.1"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+keyring = { version = "4.2.0", features = ["windows-native-keyring-store"]}
+windows-native-keyring-store = "1.1.0"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+keyring = { version = "4.2.0", features = ["apple-native-keyring-store"]}
 
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration

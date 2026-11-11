@@ -3548,6 +3548,7 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-opener",
  "tauri-plugin-shell",
+ "windows-native-keyring-store",
 ]
 
 [[package]]
