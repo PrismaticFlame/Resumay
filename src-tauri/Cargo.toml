@@ -28,15 +28,15 @@ keyring-core = "1.0.1"
 reqwest = { version = "0.13.5", features = ["json"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
-keyring = { version = "4.2.0", features = ["dbus-secret-service-keyring-store"]}
+keyring = { version = "4.2.0", features = ["dbus-secret-service-keyring-store"] }
 dbus-secret-service-keyring-store = "1.0.1"
 
 [target.'cfg(target_os = "windows")'.dependencies]
-keyring = { version = "4.2.0", features = ["windows-native-keyring-store"]}
+keyring = { version = "4.2.0", features = ["windows-native-keyring-store"] }
 windows-native-keyring-store = "1.1.0"
 
 [target.'cfg(target_os = "macos")'.dependencies]
-keyring = { version = "4.2.0", features = ["apple-native-keyring-store"]}
+keyring = { version = "4.2.0", features = ["apple-native-keyring-store"] }
 
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
