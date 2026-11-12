@@ -14,8 +14,10 @@
     let previewUrl = $state("");
     let fileInput = $state<HTMLInputElement | null>(null);
 
+    // existing resumes are stored here
     let resumes = $state<Resume[]>([]);
 
+    // all the fields of the application. these are defined in a struct in types
     let company = $state(app?.company ?? "");
     let position = $state(app?.position ?? "");
     let website = $state(app?.website ?? "");
@@ -99,6 +101,7 @@
       };
     });
 
+    // populate the resumes array with existing resumes
     onMount(
       async () => { resumes = await invoke<Resume[]>("list_resumes"); 
     });

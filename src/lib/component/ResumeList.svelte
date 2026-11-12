@@ -19,7 +19,11 @@
 {/each}
 
 <style>
-    .head { display: flex; justify-content: space-between; padding: 12px 16px; }
+    .head { 
+        display: flex; 
+        justify-content: space-between; 
+        padding: 12px 16px; 
+    }
     .row { display: flex; flex-direction: column; align-items: stretch;
        justify-content: flex-start; text-align: left;
        width: 100%; padding: 12px 16px; gap: 4px; }
