@@ -1,9 +1,22 @@
 :root {
-    --bg: #F3F4F6; --surface: #FFFFFF; --ink: #111827;
-    --muted: #4B5563; --line: #E5E7EB;
-    --accent: #3346D3; --accent-weak: #EEF0FF;
+    --bg: #F3F4F6; 
+    --surface: #FFFFFF; 
+    --ink: #111827;
+    --muted: #4B5563; 
+    --line: #E5E7EB;
+    --accent: #3346D3; 
+    --accent-weak: #EEF0FF;
     font-family: 'IBM Plex Sans', system-ui, sans-serif;
     font-size: 14px;
+}
+:root[data-theme='dark'] {
+    --bg: #121212;
+    --surface: #1C1C1E;
+    --ink: #EDEDED;
+    --muted: #A1A1AA;
+    --line: #2C2C2E;
+    --accent: #7C8CFF;
+    --accent-weak: #2A2D3E;
 }
 body { margin: 0; background: var(--bg); color: var(--ink); }
 button, input, select, textarea { font: inherit; }
@@ -12,9 +25,56 @@ button, input, select, textarea { font: inherit; }
        border-bottom: 1px solid #F1F2F4; background: transparent;
        color: inherit; text-align: left; cursor: pointer; }
 .row.on { background: var(--accent-weak); box-shadow: inset 3px 0 0 var(--accent); }
-.head { position: sticky; top: 0; background: #F9FAFB; cursor: default; font-size: 12px;
-        font-weight: 600; color: var(--muted); text-transform: uppercase;
-        letter-spacing: .05em; padding: 12px 20px; }
+.head { 
+    position: sticky; 
+    top: 0; 
+    background: var(--surface); 
+    cursor: default; 
+    font-size: 12px;
+    font-weight: 600; 
+    color: var(--muted); 
+    text-transform: uppercase;
+    letter-spacing: .05em; 
+    padding: 12px 20px; 
+}
 .who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 small { color: var(--muted); font-size: 13px; }
 .mono { font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
+/* playing around with the styling of the primary coloring. keeping this option for a while */
+/* .primary { 
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: normal;
+    text-transform: none;
+    cursor: pointer;
+} */
+.primary {
+    min-height: 44px; padding: 0 18px; border: none; border-radius: 8px;
+    background: var(--accent); color: #fff; font-weight: 600; cursor: pointer;
+}
+.primary:hover:not(:disabled) { filter: brightness(1.1); }
+.chips { 
+    display: flex; 
+    gap: 8px; 
+    padding: 0 28px 16px; 
+}
+.chip { 
+    min-height: 40px; 
+    padding: 0 14px; 
+    border-radius: 999px; 
+    cursor: pointer;
+    border: 1px solid #D1D5DB; 
+    background: var(--surface); 
+    text-transform: capitalize; 
+    color: var(--ink);
+}
+.chip.on { 
+    background: var(--ink); 
+    border-color: var(--ink); 
+    color: var(--surface); 
+}

@@ -51,10 +51,6 @@
   ));
   let selected = $derived(visible.find(a => a.id === selectedId) ?? visible[0]);
 
-  let latexSource = $state("");
-  let compileError = $state("");
-  let pdfBlobUrl = $state("");
-
   async function listApplications() {
     try {
       applications = await invoke<Application[]>("list_applications");
@@ -70,20 +66,6 @@
       await listApplications();
     } catch (err) {
       message = `Error: ${err}`;
-    }
-  }
-
-  async function compileLatex() {
-    compileError = "";
-    try {
-      const bytes = await invoke<number[]>("compile_resume", {
-        tex: latexSource
-      });
-      const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
-      if (pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
-      pdfBlobUrl = URL.createObjectURL(blob);
-    } catch (err) {
-      compileError = String(err);
     }
   }
 
@@ -149,12 +131,6 @@
     border: 1px solid #D1D5DB; border-radius: 8px; background: var(--surface); }
   .primary { min-height: 44px; padding: 0 18px; border: none; border-radius: 8px;
     background: var(--accent); color: #fff; font-weight: 600; cursor: pointer; }
-
-  .chips { display: flex; gap: 8px; padding: 0 28px 16px; }
-  .chip { min-height: 40px; padding: 0 14px; border-radius: 999px; cursor: pointer;
-    border: 1px solid #D1D5DB; background: var(--surface); text-transform: capitalize; }
-  .chip.on { background: var(--ink); border-color: var(--ink); color: #fff; }
-
   .work { display: grid; grid-template-columns: 1fr 420px; gap: 20px;
     flex: 1; min-height: 0; padding: 0 28px 28px; }
   .work > div { background: var(--surface); border: 1px solid var(--line);
