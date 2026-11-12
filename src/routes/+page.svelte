@@ -51,10 +51,6 @@
   ));
   let selected = $derived(visible.find(a => a.id === selectedId) ?? visible[0]);
 
-  let latexSource = $state("");
-  let compileError = $state("");
-  let pdfBlobUrl = $state("");
-
   async function listApplications() {
     try {
       applications = await invoke<Application[]>("list_applications");
@@ -70,20 +66,6 @@
       await listApplications();
     } catch (err) {
       message = `Error: ${err}`;
-    }
-  }
-
-  async function compileLatex() {
-    compileError = "";
-    try {
-      const bytes = await invoke<number[]>("compile_resume", {
-        tex: latexSource
-      });
-      const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
-      if (pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
-      pdfBlobUrl = URL.createObjectURL(blob);
-    } catch (err) {
-      compileError = String(err);
     }
   }
 
