@@ -1,5 +1,6 @@
 <script lang="ts">
     import logo from "$lib/assets/resumay-logo.svg"
+    import { invoke } from "@tauri-apps/api/core";
     import { page } from "$app/state";
     
     import { counts } from "$lib/counts.svelte";

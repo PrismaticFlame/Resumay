@@ -18,3 +18,21 @@ button, input, select, textarea { font: inherit; }
 .who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 small { color: var(--muted); font-size: 13px; }
 .mono { font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
+/* playing around with the styling of the primary coloring. keeping this option for a while */
+/* .primary { 
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: normal;
+    text-transform: none;
+    cursor: pointer;
+} */
+.primary {
+    min-height: 44px; padding: 0 18px; border: none; border-radius: 8px;
+    background: var(--accent); color: #fff; font-weight: 600; cursor: pointer;
+}
+.primary:hover:not(:disabled) { filter: brightness(1.1); }
