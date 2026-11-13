@@ -1,39 +1,48 @@
 {
-    "$schema": "https://schema.tauri.app/config/2",
-    "productName": "resumay",
-    "version": "0.1.0",
-    "identifier": "com.z3r0.resumay",
-    "build": {
-        "beforeDevCommand": "npm run dev",
-        "devUrl": "http://localhost:1420",
-        "beforeBuildCommand": "npm run build",
-        "frontendDist": "../build"
-    },
-    "app": {
-        "windows": [
-            {
-                "title": "resumay",
-                "width": 800,
-                "height": 600,
-                "dragDropEnabled": false
-            }
-        ],
-        "security": {
-            "csp": null
-        }
-    },
-    "bundle": {
-        "active": true,
-        "targets": "all",
-        "icon": [
-            "icons/32x32.png",
-            "icons/128x128.png",
-            "icons/128x128@2x.png",
-            "icons/icon.icns",
-            "icons/icon.ico"
-        ],
-        "externalBin": [
-            "binaries/tectonic"
-        ]
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "resumay",
+  "version": "../package.json",
+  "identifier": "com.z3r0.resumay",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "resumay",
+        "width": 800,
+        "height": 600,
+        "dragDropEnabled": false
+      }
+    ],
+    "security": {
+      "csp": null
     }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "externalBin": [
+      "binaries/tectonic"
+    ],
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDI2NzAyNzU0RjlBNzM1M0QKUldROU5hZjVWQ2R3SnBodmVOemZMaERmOHJxbER4UHVpREEwTDN2ZzAwRTY3c0MvTHA4d0djcnYK",
+      "endpoints": [
+        "https://github.com/PrismaticFlame/resumay/releases/latest/download/latest.json"
+      ]
+    }
+  }
 }
