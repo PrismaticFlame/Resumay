@@ -3875,7 +3875,7 @@ dependencies = [
 
 [[package]]
 name = "resumay"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "cargo-edit",
  "dbus-secret-service-keyring-store",
