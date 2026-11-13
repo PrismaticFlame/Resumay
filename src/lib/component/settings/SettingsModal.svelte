@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { checkForUpdate } from "$lib/updater";
+    import { checkForUpdate } from "$lib/updater.svelte";
     import { getVersion } from "@tauri-apps/api/app";
     import { onMount } from "svelte";
 
+    import { app } from "$lib/updater.svelte";
     import SettingRow from "./SettingRow.svelte";
 
     let { onclose }: { onclose: () => void } = $props();
-    let appVersion = $state('');
 
     type Theme = 'light' | 'dark';
 
@@ -21,7 +21,7 @@
     );
 
     let updateChecking = $state(false);
-    let updateErrorMessage = $state("");
+    let updateMessage = $state("");
 
     function setTheme(next: Theme) {
         theme = next;
@@ -30,18 +30,17 @@
     }
 
     async function handleCheck() {
-        updateErrorMessage = '';
+        updateMessage = '';
         try {
             updateChecking = true;
             await checkForUpdate(true);
+            
         } catch (e) {
-            updateErrorMessage = String(e);
+            updateMessage = String(e);
         } finally {
             updateChecking = false;
         }
     }
-
-    onMount(async () => (appVersion = await getVersion()));
 </script>
 
 <dialog
@@ -63,13 +62,13 @@
         </section>
         <section>
             <h3>App</h3>
-            <SettingRow label="Updates" description="Version {appVersion}">
+            <SettingRow label="Updates" description="Version {app.version}">
                 <button class="action" onclick={handleCheck} disabled={updateChecking}>
                     {updateChecking ? 'Checking...' : 'Check for updates'}
                 </button>
             </SettingRow>
-            {#if updateErrorMessage}
-                <p class="error">{updateErrorMessage}</p>
+            {#if updateMessage}
+                <p class="error">{updateMessage}</p>
             {/if}
         </section>
     </div>

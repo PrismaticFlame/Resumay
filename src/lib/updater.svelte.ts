@@ -1,5 +1,12 @@
 import { check } from '@tauri-apps/plugin-updater';
 import { relaunch } from '@tauri-apps/plugin-process';
+import { getVersion } from "@tauri-apps/api/app";
+
+export const app = $state({ version: '' });
+
+export async function loadVersion() {
+    app.version = await getVersion();
+}
 
 export async function checkForUpdate(manual = false) {
     try {
