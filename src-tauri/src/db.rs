@@ -1,4 +1,4 @@
-use rusqlite::{Connection, Result, params};
+use rusqlite::{params, Connection, Result};
 
 pub fn init(conn: &Connection) -> Result<()> {
     conn.execute_batch("PRAGMA foreign_keys = ON;")?;
@@ -25,26 +25,27 @@ pub struct Application {
     apply_date: String,
 }
 
-pub fn add_application(conn: &Connection, 
-                        company: &str, 
-                        position: &str,
-                        website: Option<&str>,
-                        job_description: Option<&str>,
-                        username: Option<&str>,
-                        status: &str,
-                        resume: Option<i32>,
-                        notes: Option<&str>,
-                        refer: Option<&str>,
-                        apply_date: &str) -> Result<i32> {
+pub fn add_application(
+    conn: &Connection,
+    company: &str,
+    position: &str,
+    website: Option<&str>,
+    job_description: Option<&str>,
+    username: Option<&str>,
+    status: &str,
+    resume: Option<i32>,
+    notes: Option<&str>,
+    refer: Option<&str>,
+    apply_date: &str,
+) -> Result<i32> {
     conn.execute(
         "INSERT INTO   applications (company, position, website, username, status, resume, notes, refer, apply_date, job_description)
         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
         params![company, position, website, username, status, resume, notes, refer, apply_date, job_description]
     )?;
-    
-    return Ok(conn.last_insert_rowid().try_into().unwrap())
-}
 
+    return Ok(conn.last_insert_rowid().try_into().unwrap());
+}
 
 pub fn list_applications(conn: &Connection) -> Result<Vec<Application>, rusqlite::Error> {
     let mut stmt = conn.prepare(
@@ -67,23 +68,25 @@ pub fn list_applications(conn: &Connection) -> Result<Vec<Application>, rusqlite
         })
     })?;
 
-    let application_list: Vec<Application> = appli_iter.collect::<Result<Vec<_>,_>>()?;
+    let application_list: Vec<Application> = appli_iter.collect::<Result<Vec<_>, _>>()?;
 
     Ok(application_list)
 }
 
-pub fn update_application(conn: &Connection, 
-                        id: i32,
-                        company: &str, 
-                        position: &str,
-                        website: Option<&str>,
-                        job_description: Option<&str>,
-                        username: Option<&str>,
-                        status: &str,
-                        resume: Option<i32>,
-                        notes: Option<&str>,
-                        refer: Option<&str>,
-                        apply_date: &str) -> Result<usize> {
+pub fn update_application(
+    conn: &Connection,
+    id: i32,
+    company: &str,
+    position: &str,
+    website: Option<&str>,
+    job_description: Option<&str>,
+    username: Option<&str>,
+    status: &str,
+    resume: Option<i32>,
+    notes: Option<&str>,
+    refer: Option<&str>,
+    apply_date: &str,
+) -> Result<usize> {
     let changed = conn.execute(
         "UPDATE applications
         SET company = ?1, position = ?2, website = ?3, job_description = ?4, username = ?5, status = ?6, resume = ?7, notes = ?8, refer = ?9, apply_date = ?10
@@ -94,20 +97,20 @@ pub fn update_application(conn: &Connection,
     Ok(changed)
 }
 
-
 pub fn delete_application(conn: &Connection, id: i32) -> Result<(), String> {
-    conn.execute("DELETE FROM applications WHERE id = ?1", [id]).map_err(|e| e.to_string())?;
+    conn.execute("DELETE FROM applications WHERE id = ?1", [id])
+        .map_err(|e| e.to_string())?;
     Ok(())
 }
 
 pub fn count_applications(conn: &Connection) -> Result<i32, String> {
-    let count = conn.query_row(
-        "SELECT COUNT(*) FROM applications",
-         [], |row| row.get::<_, i32>(0))
-         .map_err(|e| e.to_string())?;
+    let count = conn
+        .query_row("SELECT COUNT(*) FROM applications", [], |row| {
+            row.get::<_, i32>(0)
+        })
+        .map_err(|e| e.to_string())?;
     Ok(count)
 }
-
 
 // ----------------------------------------------
 // RESUMES
@@ -129,17 +132,19 @@ pub struct ApplicationSummary {
     apply_date: String,
 }
 
-pub fn add_resumes(conn: &Connection,
-                    label: &str,
-                    pdf: &[u8],
-                    latex_source: Option<&str>) -> Result<i32> {
+pub fn add_resumes(
+    conn: &Connection,
+    label: &str,
+    pdf: &[u8],
+    latex_source: Option<&str>,
+) -> Result<i32> {
     conn.execute(
         "INSERT INTO resumes (label, pdf, latex_source)
         VALUES (?1, ?2, ?3)",
-        params![label, pdf, latex_source]
+        params![label, pdf, latex_source],
     )?;
 
-    return Ok(conn.last_insert_rowid().try_into().unwrap())
+    return Ok(conn.last_insert_rowid().try_into().unwrap());
 }
 
 pub fn list_resumes(conn: &Connection) -> Result<Vec<Resume>, rusqlite::Error> {
@@ -147,7 +152,7 @@ pub fn list_resumes(conn: &Connection) -> Result<Vec<Resume>, rusqlite::Error> {
         "SELECT r.id, r.label, r.created_at, COUNT(a.id) AS uses
             FROM resumes r
             LEFT JOIN applications a ON a.resume = r.id
-            GROUP BY r.id"
+            GROUP BY r.id",
     )?;
     let resume_finder = stmt.query_map([], |row| {
         Ok(Resume {
@@ -158,25 +163,25 @@ pub fn list_resumes(conn: &Connection) -> Result<Vec<Resume>, rusqlite::Error> {
         })
     })?;
 
-    let resume_list: Vec<Resume> = resume_finder.collect::<Result<Vec<_>,_>>()?;
+    let resume_list: Vec<Resume> = resume_finder.collect::<Result<Vec<_>, _>>()?;
 
     Ok(resume_list)
 }
 
 pub fn fetch_resume(conn: &Connection, id: i32) -> Result<Vec<u8>> {
-    conn.query_row(
-        "SELECT pdf FROM resumes WHERE id = ?1",
-        [id],
-        |row| row.get::<_, Vec<u8>>(0),
-    )
+    conn.query_row("SELECT pdf FROM resumes WHERE id = ?1", [id], |row| {
+        row.get::<_, Vec<u8>>(0)
+    })
 }
 
 pub fn delete_resume(conn: &Connection, id: i32) -> Result<(), String> {
-    let changed = conn.execute(
-        "DELETE FROM resumes WHERE id = ?1
-        AND NOT EXISTS (SELECT 1 FROM applications WHERE resume = ?1)", 
-        [id]).
-        map_err(|e| e.to_string())?;
+    let changed = conn
+        .execute(
+            "DELETE FROM resumes WHERE id = ?1
+        AND NOT EXISTS (SELECT 1 FROM applications WHERE resume = ?1)",
+            [id],
+        )
+        .map_err(|e| e.to_string())?;
     if changed == 0 {
         return Err("Resume is still attached to an application".to_string());
     }
@@ -184,21 +189,23 @@ pub fn delete_resume(conn: &Connection, id: i32) -> Result<(), String> {
 }
 
 pub fn count_resumes(conn: &Connection) -> Result<i32, String> {
-    let count = 
-        conn.query_row(
-            "SELECT COUNT(*) FROM resumes",
-             [],
-              |row| row.get::<_, i32>(0))
-              .map_err(|e| e.to_string())?;
+    let count = conn
+        .query_row("SELECT COUNT(*) FROM resumes", [], |row| {
+            row.get::<_, i32>(0)
+        })
+        .map_err(|e| e.to_string())?;
     Ok(count)
 }
 
-pub fn fetch_application_summary(conn: &Connection, resume_id: i32) -> Result<Vec<ApplicationSummary>, rusqlite::Error> {
+pub fn fetch_application_summary(
+    conn: &Connection,
+    resume_id: i32,
+) -> Result<Vec<ApplicationSummary>, rusqlite::Error> {
     let mut stmt = conn.prepare(
         "SELECT id, company, position, status, apply_date
         FROM applications
         WHERE resume = ?1
-        ORDER BY apply_date DESC"
+        ORDER BY apply_date DESC",
     )?;
     let applis = stmt.query_map([resume_id], |row| {
         Ok(ApplicationSummary {
@@ -210,7 +217,8 @@ pub fn fetch_application_summary(conn: &Connection, resume_id: i32) -> Result<Ve
         })
     })?;
 
-    let application_summary_list: Vec<ApplicationSummary> = applis.collect::<Result<Vec<_>,_>>()?;
+    let application_summary_list: Vec<ApplicationSummary> =
+        applis.collect::<Result<Vec<_>, _>>()?;
 
     Ok(application_summary_list)
 }

@@ -5,7 +5,7 @@
     
     import { counts } from "$lib/counts.svelte";
 
-    import SettingsModal from "./SettingsModal.svelte";
+    import SettingsModal from "./settings/SettingsModal.svelte";
     let showSettings = $state(false);
 </script>
 
