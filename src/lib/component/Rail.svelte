@@ -1,11 +1,11 @@
 <script lang="ts">
     import logo from "$lib/assets/resumay-logo.svg"
-    import { invoke } from "@tauri-apps/api/core";
     import { page } from "$app/state";
     
     import { counts } from "$lib/counts.svelte";
+    import { app } from "$lib/updater.svelte";
 
-    import SettingsModal from "./SettingsModal.svelte";
+    import SettingsModal from "./settings/SettingsModal.svelte";
     let showSettings = $state(false);
 </script>
 
@@ -30,6 +30,9 @@
     {#if showSettings}
         <SettingsModal onclose={() => (showSettings = false)} />
     {/if}
+    {#if app.version}
+        <span class="version">v{app.version}</span>
+    {/if}
 </nav>
 
 <style>
@@ -42,4 +45,11 @@
     .item { display: flex; align-items: center; justify-content: space-between; }
     .count { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
     .settings { margin-top: auto; }
+    .version {
+        margin-top: 0;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 11px;
+        color: var(--muted);
+        
+    }
 </style>

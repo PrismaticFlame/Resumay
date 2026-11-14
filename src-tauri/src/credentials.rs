@@ -1,13 +1,16 @@
 use keyring_core::{Entry, Error};
 
 fn entry_for(application_id: i32) -> Result<Entry, String> {
-    Entry::new("resumay", &format!("app-{application_id}")).map_err(|e| format!("Creating entry: {e}"))
+    Entry::new("resumay", &format!("app-{application_id}"))
+        .map_err(|e| format!("Creating entry: {e}"))
 }
 
 #[tauri::command]
 pub fn save_credential(application_id: i32, password: &str) -> Result<(), String> {
     let entry = entry_for(application_id)?;
-    entry.set_password(password).map_err(|e| format!("Setting password: {e}"))?;
+    entry
+        .set_password(password)
+        .map_err(|e| format!("Setting password: {e}"))?;
     Ok(())
 }
 

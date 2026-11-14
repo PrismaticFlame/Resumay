@@ -4,36 +4,12 @@
   import { onMount } from 'svelte';
   import type { Application, Resume } from "$lib/types";
   import { STATUS } from "$lib/status";
+  
 
   import Rail from "$lib/component/Rail.svelte";
   import DetailPane from "$lib/component/DetailPane.svelte";
   import AppList from "$lib/component/AppList.svelte";
   import NewApplicationModal from "$lib/component/NewApplicationModal.svelte"
-
-  interface Application {
-    id: number;
-    company: string;
-    position: string;
-    website: string | null;
-    job_description: string | null;
-    username: string | null;
-    status: string;
-    resume: number | null;
-    notes: string | null;
-    refer: string | null;
-    apply_date: string;
-  }
-
-  interface Resume {
-    id: number;
-    label: string;
-    created_at: string;
-    uses: number;
-  }
-
-  onMount(async () => {
-    listApplications();
-  });
 
   let filter = $state("all");
   let query = $state("");
@@ -43,7 +19,6 @@
 
   let message = $state("");
   let applications = $state<Application[]>([]);
-  let resumes = $state<Resume[]>([]);
 
   let visible = $derived(applications.filter(a =>
   (filter === "all" || a.status === filter) &&
@@ -75,6 +50,10 @@
     showModal = false;
     editing = null;
   }
+
+  onMount(async () => {
+    listApplications();
+  });
 
 </script>
 

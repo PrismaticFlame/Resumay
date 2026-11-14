@@ -1,13 +1,13 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
+mod credentials;
 mod db;
 mod latex;
-mod credentials;
 
+use keyring_core::set_default_store;
 use std::sync::Mutex;
-use tauri::Manager;
 use tauri::AppHandle;
-use keyring_core::{set_default_store};
+use tauri::Manager;
 // use tauri_plugin_shell::ShellExt;
 
 pub struct DbState(pub Mutex<rusqlite::Connection>);
@@ -22,11 +22,36 @@ fn greet(name: &str) -> String {
 // ---------------------------
 
 #[tauri::command]
-fn add_application(state: tauri::State<DbState>, company: &str, position: &str, website: Option<&str>, job_description: Option<&str>, username: Option<&str>, status: &str, 
-                    resume: Option<i32>, notes: Option<&str>, refer: Option<&str>, apply_date: &str, password: Option<&str>) -> Result<i32, String> {
+fn add_application(
+    state: tauri::State<DbState>,
+    company: &str,
+    position: &str,
+    website: Option<&str>,
+    job_description: Option<&str>,
+    username: Option<&str>,
+    status: &str,
+    resume: Option<i32>,
+    notes: Option<&str>,
+    refer: Option<&str>,
+    apply_date: &str,
+    password: Option<&str>,
+) -> Result<i32, String> {
     let id = {
         let conn = state.0.lock().map_err(|e| e.to_string())?;
-        db::add_application(&conn, company, position, website, job_description, username, status, resume, notes, refer, apply_date).map_err(|e| e.to_string())?
+        db::add_application(
+            &conn,
+            company,
+            position,
+            website,
+            job_description,
+            username,
+            status,
+            resume,
+            notes,
+            refer,
+            apply_date,
+        )
+        .map_err(|e| e.to_string())?
     };
     if let Some(pw) = password.filter(|p| !p.is_empty()) {
         credentials::save_credential(id, pw)?;
@@ -35,7 +60,7 @@ fn add_application(state: tauri::State<DbState>, company: &str, position: &str, 
 }
 
 #[tauri::command]
-fn delete_application(state: tauri::State<DbState>, id: i32) ->Result<(), String> {
+fn delete_application(state: tauri::State<DbState>, id: i32) -> Result<(), String> {
     let _del = {
         let conn = state.0.lock().map_err(|e| e.to_string())?;
         db::delete_application(&conn, id).map_err(|e| e.to_string())?;
@@ -51,11 +76,38 @@ fn list_applications(state: tauri::State<DbState>) -> Result<Vec<db::Application
 }
 
 #[tauri::command]
-fn update_application(state: tauri::State<DbState>, id: i32, company: &str, position: &str, website: Option<&str>, job_description: Option<&str>, username: Option<&str>, status: &str, 
-                    resume: Option<i32>, notes: Option<&str>, refer: Option<&str>, apply_date: &str, password: Option<&str>) -> Result<usize, String> {
+fn update_application(
+    state: tauri::State<DbState>,
+    id: i32,
+    company: &str,
+    position: &str,
+    website: Option<&str>,
+    job_description: Option<&str>,
+    username: Option<&str>,
+    status: &str,
+    resume: Option<i32>,
+    notes: Option<&str>,
+    refer: Option<&str>,
+    apply_date: &str,
+    password: Option<&str>,
+) -> Result<usize, String> {
     let updated = {
         let conn = state.0.lock().map_err(|e| e.to_string())?;
-        db::update_application(&conn, id, company, position, website, job_description, username, status, resume, notes, refer, apply_date).map_err(|e| e.to_string())?
+        db::update_application(
+            &conn,
+            id,
+            company,
+            position,
+            website,
+            job_description,
+            username,
+            status,
+            resume,
+            notes,
+            refer,
+            apply_date,
+        )
+        .map_err(|e| e.to_string())?
     };
     if let Some(pw) = password.filter(|p| !p.is_empty()) {
         credentials::save_credential(id, pw)?;
@@ -77,7 +129,12 @@ fn count_applications(state: tauri::State<DbState>) -> Result<i32, String> {
 // ---------------------------
 
 #[tauri::command]
-fn add_resume(state: tauri::State<DbState>, label: &str, pdf: Vec<u8>, latex_source: Option<&str>) -> Result<i32, String> {
+fn add_resume(
+    state: tauri::State<DbState>,
+    label: &str,
+    pdf: Vec<u8>,
+    latex_source: Option<&str>,
+) -> Result<i32, String> {
     let id = {
         let conn = state.0.lock().map_err(|e| e.to_string())?;
         db::add_resumes(&conn, label, &pdf, latex_source).map_err(|e| e.to_string())?
@@ -96,7 +153,7 @@ fn fetch_resume(state: tauri::State<DbState>, id: i32) -> Result<Vec<u8>, String
     let conn = state.0.lock().map_err(|e| e.to_string())?;
     let resume: Vec<u8> = db::fetch_resume(&conn, id).map_err(|e| e.to_string())?;
 
-    return Ok(resume)
+    return Ok(resume);
 }
 
 #[tauri::command]
@@ -118,14 +175,16 @@ fn count_resumes(state: tauri::State<DbState>) -> Result<i32, String> {
 }
 
 #[tauri::command]
-fn fetch_application_summary(state: tauri::State<DbState>, id: i32) -> Result<Vec<db::ApplicationSummary>, String> {
+fn fetch_application_summary(
+    state: tauri::State<DbState>,
+    id: i32,
+) -> Result<Vec<db::ApplicationSummary>, String> {
     let appli_summary = {
         let conn = state.0.lock().map_err(|e| e.to_string())?;
         db::fetch_application_summary(&conn, id).map_err(|e| e.to_string())?
     };
     Ok(appli_summary)
 }
-
 
 #[tauri::command]
 async fn compile_resume(app: AppHandle, tex: String) -> Result<Vec<u8>, String> {
@@ -135,6 +194,8 @@ async fn compile_resume(app: AppHandle, tex: String) -> Result<Vec<u8>, String> 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_shell::init())
         .setup(|app| {
@@ -145,12 +206,14 @@ pub fn run() {
             app.manage(DbState(Mutex::new(conn)));
             #[cfg(target_os = "linux")]
             {
-                let store = dbus_secret_service_keyring_store::Store::new().map_err(|e| format!("create store (linux): {e}"))?;
+                let store = dbus_secret_service_keyring_store::Store::new()
+                    .map_err(|e| format!("create store (linux): {e}"))?;
                 set_default_store(store);
             };
             #[cfg(target_os = "windows")]
             {
-                let store = windows_native_keyring_store::Store::new().map_err(|e| format!("create store (windows): {e}"))?;
+                let store = windows_native_keyring_store::Store::new()
+                    .map_err(|e| format!("create store (windows): {e}"))?;
                 set_default_store(store);
             };
             // tauri::async_runtime::spawn(async move {
@@ -175,8 +238,8 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            greet, 
-            add_application, 
+            greet,
+            add_application,
             list_applications,
             delete_application,
             update_application,
@@ -190,7 +253,8 @@ pub fn run() {
             credentials::save_credential,
             credentials::get_credential,
             credentials::delete_credential,
-            compile_resume])
+            compile_resume
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

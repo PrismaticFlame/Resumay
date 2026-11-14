@@ -12,7 +12,11 @@ pub async fn compile(app: &AppHandle, tex: &str) -> Result<Vec<u8>, String> {
         .shell()
         .sidecar("tectonic")
         .map_err(|e| format!("find sidecar: {e}"))?
-        .args([tex_path.to_str().unwrap(), "--outdir", dir.to_str().unwrap()])
+        .args([
+            tex_path.to_str().unwrap(),
+            "--outdir",
+            dir.to_str().unwrap(),
+        ])
         .output()
         .await
         .map_err(|e| format!("run sidecar: {e}"))?;
