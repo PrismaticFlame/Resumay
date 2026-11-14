@@ -7,8 +7,6 @@
     import StatusPill from "./StatusPill.svelte";
 
     let { resume, ondelete } = $props();
-    // let confirming = $state(false);
-    // let editing = $state(false);
 
     let apps = $state<ApplicationSummary[]>([]);
     onMount(async () => {

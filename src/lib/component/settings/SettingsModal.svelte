@@ -1,7 +1,5 @@
 <script lang="ts">
     import { checkForUpdate } from "$lib/updater.svelte";
-    import { getVersion } from "@tauri-apps/api/app";
-    import { onMount } from "svelte";
 
     import { app } from "$lib/updater.svelte";
     import SettingRow from "./SettingRow.svelte";

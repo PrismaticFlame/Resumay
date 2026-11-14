@@ -4,7 +4,6 @@
     import { onMount } from "svelte";
     import type { Resume } from "$lib/types";
     import { timeFormat } from "$lib/time-format";
-    import Page from "../../routes/+page.svelte";
 
     let { onclose, onsaved, app = null } = $props();
 

@@ -2,7 +2,6 @@
     import StatusPill from "./StatusPill.svelte";
     let { app, ondelete, onedit } = $props();
     let confirming = $state(false);
-    let editing = $state(false);
 </script>
 
 <div class="pane">
