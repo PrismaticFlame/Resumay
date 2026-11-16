@@ -2,7 +2,6 @@
     import StatusPill from "./StatusPill.svelte";
     let { app, ondelete, onedit } = $props();
     let confirming = $state(false);
-    let editing = $state(false);
 </script>
 
 <div class="pane">
@@ -70,10 +69,12 @@
     .danger { display: flex; align-items: center; gap: 8px; margin-top: 28px;
           padding-top: 16px; padding-left: 16px; border-top: 1px solid var(--line); }
     .danger button { min-height: 44px; padding: 0 14px; border-radius: 8px;
-                    border: 1px solid #D1D5DB; background: #fff; cursor: pointer; }
+                    border: 1px solid var(--btn-border); background: var(--btn-bg); color: var(--ink);
+                    cursor: pointer; }
     .del { background: #B91C1C !important; border-color: #B91C1C !important; color: #fff; }
-    .del-ghost { color: #B91C1C; }
+    .del-ghost { color: var(--danger); }
     .top { display: flex; align-items: center; justify-content: space-between; }
     .edit { min-height: 44px; padding: 0 14px; border-radius: 8px;
-            border: 1px solid #D1D5DB; background: #fff; cursor: pointer; }
+            border: 1px solid var(--btn-border); background: var(--btn-bg); color: var(--ink);
+            cursor: pointer; }
 </style>
