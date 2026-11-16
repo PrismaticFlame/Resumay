@@ -4,6 +4,7 @@
   import { onMount } from 'svelte';
   import type { Application, Resume } from "$lib/types";
   import { STATUS } from "$lib/status";
+  import { refreshCounts } from "$lib/counts.svelte";
   
 
   import Rail from "$lib/component/Rail.svelte";
@@ -29,6 +30,7 @@
   async function listApplications() {
     try {
       applications = await invoke<Application[]>("list_applications");
+      refreshCounts();
     } catch (err) {
       message = `Error: ${err}`;
     }

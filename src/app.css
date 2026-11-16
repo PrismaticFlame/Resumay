@@ -6,6 +6,14 @@
     --line: #E5E7EB;
     --accent: #3346D3; 
     --accent-weak: #EEF0FF;
+    --btn-bg: #FFFFFF;
+    --btn-border: #D1D5DB;
+    --danger: #B91C1C;
+    --st-applied-fg: #1E40AF; --st-applied-bg: #DBEAFE;
+    --st-drafting-fg: #5B21B6; --st-drafting-bg: #DBEAFE;
+    --st-interviewing-fg: #9A3412; --st-interviewing-bg: #FFEDD5;
+    --st-offer-fg: #166534; --st-offer-bg: #DCFCE7;
+    --st-rejected-fg: #374151; --st-rejected-fg: #E5E7EB;
     font-family: 'IBM Plex Sans', system-ui, sans-serif;
     font-size: 14px;
 }
@@ -17,6 +25,14 @@
     --line: #2C2C2E;
     --accent: #7C8CFF;
     --accent-weak: #2A2D3E;
+    --btn-bg: #2A2A2D;
+    --btn-border: #3A3A3C;
+    --danger: #F87171;
+    --st-applied-fg: #93C5FD;  --st-applied-bg: rgba(59, 130, 246, .18);
+    --st-drafting-fg: #C4B5FD; --st-drafting-bg: rgba(139, 92, 246, .18);
+    --st-interviewing-fg: #FDBA74; --st-interviewing-bg: rgba(249, 115, 22, .18);
+    --st-offer-fg: #86EFAC;    --st-offer-bg: rgba(34, 197, 94, .18);
+    --st-rejected-fg: #A1A1AA; --st-rejected-bg: rgba(161, 161, 170, .16);
 }
 body { margin: 0; background: var(--bg); color: var(--ink); }
 button, input, select, textarea { font: inherit; }

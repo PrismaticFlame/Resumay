@@ -1,9 +1,9 @@
 export const STATUS = {
-    drafting:     { label: "Drafting",     fg: "#5B21B6", bg: "#EDE9FE" },
-    applied:      { label: "Applied",      fg: "#1E40AF", bg: "#DBEAFE" },
-    interviewing: { label: "Interviewing", fg: "#9A3412", bg: "#FFEDD5" },
-    offer:        { label: "Offer",        fg: "#166534", bg: "#DCFCE7" },
-    rejected:     { label: "Rejected",     fg: "#374151", bg: "#E5E7EB" },
+    drafting:     { label: "Drafting",     fg: "var(--st-drafting-fg)",     bg: "var(--st-drafting-bg)" },
+    applied:      { label: "Applied",      fg: "var(--st-applied-fg)",      bg: "var(--st-applied-bg)" },
+    interviewing: { label: "Interviewing", fg: "var(--st-interviewing-fg)", bg: "var(--st-interviewing-bg)" },
+    offer:        { label: "Offer",        fg: "var(--st-offer-fg)",        bg: "var(--st-offer-bg)" },
+    rejected:     { label: "Rejected",     fg: "var(--st-rejected-fg)",        bg: "var(--st-rejected-bg)" },
 };
 export const FALLBACK = { label: "", fg: "#374151", bg: "#E5E7EB"}
 
