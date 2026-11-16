@@ -51,7 +51,11 @@
                         {compiling ? "Compiling..." : "Compile Latex"}
                     </button>
                 </div>
-                <textarea bind:value={latexSource} spellcheck="false"></textarea>
+                <textarea 
+                bind:value={latexSource} 
+                spellcheck="false" 
+                placeholder={"\\documentclass{article}\n\\begin{document}\nHello, World!\n\\end{document}"}>
+                </textarea>
             </div>
 
             <div class="right">

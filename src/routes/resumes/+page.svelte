@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import type { Application, Resume } from "$lib/types";
     import { USES } from "$lib/status";
+    import { refreshCounts } from "$lib/counts.svelte";
 
     import Rail from "$lib/component/Rail.svelte";
     import ResumeDetailPane from "$lib/component/ResumeDetailPane.svelte";
@@ -13,6 +14,8 @@
     let query = $state("");
     let filter = $state("all");
     let previewUrl = $state("");
+
+    let showModal = $state(false);
 
     let rSelectedId = $state<number | null>(null);
 
@@ -26,6 +29,7 @@
 
     async function load() {
         resumes = await invoke<Resume[]>("list_resumes"); 
+        refreshCounts();
     }
     onMount(load);
 
@@ -66,6 +70,7 @@
         {/if}
       </div>
       <input type="search" placeholder="Search resumes" bind:value={query} />
+      <button class="primary" onclick={() => showModal = true}>+ New Resume</button>
       <!-- Button for new Resumes here -->
     </header>
 
