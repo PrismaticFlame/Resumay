@@ -20,6 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check tag matches version
+        run: test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"  # this will force the build to fail if the versions from package.json don't match the version pushed
+
       - name: Install Linux Dependencies
         if: matrix.os == 'ubuntu-22.04'
         run: |
