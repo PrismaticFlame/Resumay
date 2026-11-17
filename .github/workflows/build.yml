@@ -79,6 +79,8 @@ jobs:
             ## Download
             - **Windows**: download the `.msi` or `-setup.exe` file
             - **Linux**: download the `.deb` (Debian/Ubuntu/Manjaro) or `.AppImage` (universal)
+
+            This update creates a custom modal for detecting and downloading future updates, as as fixing some styling issues with dark mode.
           releaseDraft: false
           prerelease: false
     
