@@ -13,7 +13,7 @@
     --st-drafting-fg: #5B21B6; --st-drafting-bg: #DBEAFE;
     --st-interviewing-fg: #9A3412; --st-interviewing-bg: #FFEDD5;
     --st-offer-fg: #166534; --st-offer-bg: #DCFCE7;
-    --st-rejected-fg: #374151; --st-rejected-fg: #E5E7EB;
+    --st-rejected-fg: #374151; --st-rejected-nh: #E5E7EB;
     font-family: 'IBM Plex Sans', system-ui, sans-serif;
     font-size: 14px;
 }

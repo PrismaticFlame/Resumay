@@ -3,7 +3,7 @@
     import { page } from "$app/state";
     
     import { counts } from "$lib/counts.svelte";
-    import { app } from "$lib/updater.svelte";
+    import { app, updater } from "$lib/updater.svelte";
 
     import SettingsModal from "./settings/SettingsModal.svelte";
     let showSettings = $state(false);
@@ -30,9 +30,9 @@
     {#if showSettings}
         <SettingsModal onclose={() => (showSettings = false)} />
     {/if}
-    {#if app.version}
-        <span class="version">v{app.version}</span>
-    {/if}
+    <button class="version" onclick={() => (updater.dismissed = false)}>
+        {updater.available ? 'Update available' : `v${app.version}`}
+    </button>
 </nav>
 
 <style>
@@ -50,6 +50,8 @@
         font-family: 'IBM Plex Mono', monospace;
         font-size: 11px;
         color: var(--muted);
-        
+        background: transparent;
+        border: none;
+        text-align: left;
     }
 </style>

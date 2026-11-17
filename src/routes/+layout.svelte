@@ -1,8 +1,8 @@
 <script lang="ts">
     import { refreshCounts } from "$lib/counts.svelte";
-    import { checkForUpdate, loadVersion } from "$lib/updater.svelte";
-    import { check } from '@tauri-apps/plugin-updater';
-    import { relaunch } from '@tauri-apps/plugin-process';
+    import { checkForUpdate, loadVersion, updater } from "$lib/updater.svelte";
+
+    import UpdateModal from "$lib/component/settings/UpdateModal.svelte";
 
     import "@fontsource/ibm-plex-sans/400.css";
     import "@fontsource/ibm-plex-sans/600.css";
@@ -18,20 +18,11 @@
         checkForUpdate();
         loadVersion();
     });
-
-    (async () => {
-        try {
-            const update = await check();
-            if (update && confirm(`Resumay ${update.version} is available. Install and restart?`)) {
-            await update.downloadAndInstall();
-            await relaunch();
-            }
-        } catch (e) {
-            console.warn('Update check failed:', e);
-        }
-    })();
     
-    
-
 </script>
+
 {@render children()}
+
+{#if updater.available && !updater.dismissed}
+    <UpdateModal />
+{/if}
