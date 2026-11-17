@@ -115,7 +115,7 @@
   .work { display: grid; grid-template-columns: 1fr 420px; gap: 20px;
     flex: 1; min-height: 0; padding: 0 28px 28px; }
   .work > div { background: var(--surface); border: 1px solid var(--line);
-    border-radius: 12px; overflow: auto; }
+    border-radius: 12px; overflow-y: auto; overflow-x: hidden; }
 
 </style>
 

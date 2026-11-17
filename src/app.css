@@ -1,3 +1,5 @@
+* { scrollbar-width: none; }
+*::-webkit-scrollbar { display: none; }
 :root {
     --bg: #F3F4F6; 
     --surface: #FFFFFF; 
@@ -13,7 +15,7 @@
     --st-drafting-fg: #5B21B6; --st-drafting-bg: #DBEAFE;
     --st-interviewing-fg: #9A3412; --st-interviewing-bg: #FFEDD5;
     --st-offer-fg: #166534; --st-offer-bg: #DCFCE7;
-    --st-rejected-fg: #374151; --st-rejected-nh: #E5E7EB;
+    --st-rejected-fg: #374151; --st-rejected-bg: #E5E7EB;
     font-family: 'IBM Plex Sans', system-ui, sans-serif;
     font-size: 14px;
 }
@@ -53,6 +55,7 @@ button, input, select, textarea { font: inherit; }
     letter-spacing: .05em; 
     padding: 12px 20px; 
 }
+.divided > * + * { border-top: 1px solid var(--line); }
 .who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 small { color: var(--muted); font-size: 13px; }
 .mono { font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
