@@ -1,6 +1,6 @@
 [package]
 name = "resumay"
-version = "0.2.3"
+version = "0.2.4"
 description = "An application and resume tracking app"
 authors = ["PrismaticFlame"]
 edition = "2021"
