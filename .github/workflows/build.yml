@@ -21,9 +21,8 @@ jobs:
       - uses: actions/checkout@v4
 
         # this will force the build to fail if the versions from package.json don't match the version pushed
-      - name: Check tag matches version
-        shell: bash
-        run: test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"  
+      - name: Check tag matches version 
+        run: node scripts/check-version.mjs
 
       - name: Install Linux Dependencies
         if: matrix.os == 'ubuntu-22.04'
