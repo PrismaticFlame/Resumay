@@ -77,6 +77,18 @@ small { color: var(--muted); font-size: 13px; }
     background: var(--accent); color: #fff; font-weight: 600; cursor: pointer;
 }
 .primary:hover:not(:disabled) { filter: brightness(1.1); }
+.ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    text-transform: none;
+    letter-spacing: normal;
+    cursor: pointer;
+}
+.ghost:hover { background: var(--bg); }
 .chips { 
     display: flex; 
     gap: 8px; 

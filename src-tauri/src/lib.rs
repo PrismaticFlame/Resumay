@@ -191,9 +191,40 @@ async fn compile_resume(app: AppHandle, tex: String) -> Result<Vec<u8>, String> 
     latex::compile(&app, &tex).await
 }
 
+fn draft_path(app: &tauri::AppHandle) -> Result<std::path::PathBuf, String> {
+    let dir = app.path().app_data_dir().map_err(|e| e.to_string())?;
+    std::fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
+    Ok(dir.join("draft.tex"))
+}
+
+#[tauri::command]
+fn save_draft(app: tauri::AppHandle, tex: String) -> Result<(), String> {
+    std::fs::write(draft_path(&app)?, tex).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn load_draft(app: tauri::AppHandle) -> Result<String, String> {
+    Ok(std::fs::read_to_string(draft_path(&app)?).unwrap_or_default())
+}
+
+#[tauri::command]
+fn write_text(path: String, contents: String) -> Result<(), String> {
+    std::fs::write(&path, contents).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn write_bytes(path: String, contents: Vec<u8>) -> Result<(), String> {
+    std::fs::write(&path, contents).map_err(|e| e.to_string())
+}
+
+// ---------------------------
+// APP
+// ---------------------------
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
@@ -250,6 +281,10 @@ pub fn run() {
             fetch_resume,
             delete_resume,
             count_resumes,
+            save_draft,
+            load_draft,
+            write_text,
+            write_bytes,
             credentials::save_credential,
             credentials::get_credential,
             credentials::delete_credential,

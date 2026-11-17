@@ -28,6 +28,7 @@ keyring-core = "1.0.1"
 reqwest = { version = "0.13.5", features = ["json"] }
 tauri-plugin-process = "2"
 cargo-edit = "0.13.14"
+tauri-plugin-dialog = "2"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 keyring = { version = "4.2.0", features = ["dbus-secret-service-keyring-store"] }

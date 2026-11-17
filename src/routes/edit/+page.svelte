@@ -1,6 +1,7 @@
 <script lang="ts">
     import { invoke } from "@tauri-apps/api/core";
-    import { onDestroy } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
+    import { save } from "@tauri-apps/plugin-dialog"
     
     import Rail from "$lib/component/Rail.svelte";
 
@@ -8,8 +9,11 @@
     let compiling = $state(false);
     let latexSource = $state("");
     let pdfBlobUrl = $state("");
+    let lastPdf: number[] = [];
 
     let message = $state("");
+
+    let loaded = $state(false);
 
     async function compileLatex() {
         if (compiling) return;
@@ -19,6 +23,7 @@
             const bytes = await invoke<number[]>("compile_resume", {
                 tex: latexSource
             });
+            lastPdf = bytes;
             const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
             if (pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
             pdfBlobUrl = URL.createObjectURL(blob);
@@ -28,6 +33,36 @@
             compiling = false;
         }
     }
+
+    async function saveTex() {
+        const path = await save ({
+            defaultPath: "resume.tex",
+            filters: [{ name: "LaTeX", extensions: ["tex"] }],
+        });
+        if (!path) return;
+        await invoke("write_text", { path, contents: latexSource });
+    }
+
+    async function savePdf() {
+        const path = await save ({
+            defaultPath: "resume.pdf",
+            filters: [{ name: "resume", extensions: ["pdf"] }],
+        });
+        if (!path) return;
+        await invoke("write_bytes", { path, contents: lastPdf });
+    }
+
+    onMount(async () => {
+        latexSource = await invoke<string>("load_draft");
+        loaded = true;
+    });
+
+    $effect(() => {
+        const tex = latexSource;
+        if (!loaded) return;
+        const t = setTimeout(() => invoke("save_draft", { tex }), 800);
+        return () => clearTimeout(t);
+    })
 
     onDestroy(() => { 
         if (pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl); 
@@ -47,9 +82,12 @@
             <div class="left">
                 <div class="pane-head">
                     <span>Source</span>
-                    <button class="primary" onclick={compileLatex} disabled={compiling}>
-                        {compiling ? "Compiling..." : "Compile Latex"}
-                    </button>
+                    <div class="pane-actions">
+                        <button class="primary" onclick={compileLatex} disabled={compiling}>
+                            {compiling ? "Compiling..." : "Compile Latex"}
+                        </button>
+                        <button class="ghost" onclick={saveTex}>Save .tex</button>
+                    </div>
                 </div>
                 <textarea 
                 bind:value={latexSource} 
@@ -61,7 +99,7 @@
             <div class="right">
                 <div class="pane-head">
                     <span>Preview</span>
-                    <button class="primary">
+                    <button disabled={!pdfBlobUrl} class="primary" onclick={savePdf}>
                         {"Save PDF"}
                     </button>
                 </div>
@@ -92,6 +130,10 @@
         grid-template-columns: 1fr 1fr;
         gap: 16px;
         padding: 0 28px 22px;
+    }
+    .pane-actions {
+        display: flex;
+        gap: 8px;
     }
     .left, .right {
         display: flex;
