@@ -151,7 +151,7 @@
         justify-content: space-between;
         padding: 10px 14px;
         border-bottom: 1px solid var(--line);
-        background: #F9FAFB;
+        background: var(--surface-2);
         font-size: 12px;
         font-weight: 600;
         color: var(--muted);
@@ -169,11 +169,12 @@
         line-height: 1.6;
         tab-size: 4;
         color: var(--ink);
+        background: var(--surface)
     }
     .viewer { 
         flex: 1; 
         min-height: 0; 
-        background: #E5E7EB;
+        background: var(--line);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -187,8 +188,8 @@
         align-self: stretch;
         margin: 0;
         padding: 14px 16px;
-        background: #FEF2F2;
-        color: #991B1B;
+        background: var(--danger-bg);
+        color: var(--danger);
         font-family: 'IBM Plex Mono', monospace;
         font-size: 12px;
         white-space: pre-wrap;

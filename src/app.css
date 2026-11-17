@@ -11,7 +11,10 @@
     --btn-bg: #FFFFFF;
     --btn-border: #D1D5DB;
     --danger: #B91C1C;
-    --st-applied-fg: #1E40AF; --st-applied-bg: #DBEAFE;
+    --on-accent: #FFFFFF;
+    --surface-2: #F9FAFB;
+    --danger-bg: #FEF2F2;
+    --st-applied-fg: #1E40AF; --st-applied-bg: #EDE9FE;
     --st-drafting-fg: #5B21B6; --st-drafting-bg: #DBEAFE;
     --st-interviewing-fg: #9A3412; --st-interviewing-bg: #FFEDD5;
     --st-offer-fg: #166534; --st-offer-bg: #DCFCE7;
@@ -20,6 +23,7 @@
     font-size: 14px;
 }
 :root[data-theme='dark'] {
+    color-scheme: dark;
     --bg: #121212;
     --surface: #1C1C1E;
     --ink: #EDEDED;
@@ -30,6 +34,9 @@
     --btn-bg: #2A2A2D;
     --btn-border: #3A3A3C;
     --danger: #F87171;
+    --on-accent: #0E1030;
+    --surface-2: #232326;
+    --danger-bg: rgba(248, 113, 113, .12);
     --st-applied-fg: #93C5FD;  --st-applied-bg: rgba(59, 130, 246, .18);
     --st-drafting-fg: #C4B5FD; --st-drafting-bg: rgba(139, 92, 246, .18);
     --st-interviewing-fg: #FDBA74; --st-interviewing-bg: rgba(249, 115, 22, .18);
@@ -37,10 +44,14 @@
     --st-rejected-fg: #A1A1AA; --st-rejected-bg: rgba(161, 161, 170, .16);
 }
 body { margin: 0; background: var(--bg); color: var(--ink); }
-button, input, select, textarea { font: inherit; }
+button, input, select, textarea { 
+    font: inherit; 
+    color: var(--ink);
+    background: var(--bg);
+}
 .row { display: grid; grid-template-columns: minmax(0, 2.4fr) 140px 110px; gap: 16px;
        align-items: center; width: 100%; padding: 14px 20px; border: none;
-       border-bottom: 1px solid #F1F2F4; background: transparent;
+       border-bottom: 1px solid var(--line); background: transparent;
        color: inherit; text-align: left; cursor: pointer; }
 .row.on { background: var(--accent-weak); box-shadow: inset 3px 0 0 var(--accent); }
 .head { 
@@ -74,7 +85,7 @@ small { color: var(--muted); font-size: 13px; }
 } */
 .primary {
     min-height: 44px; padding: 0 18px; border: none; border-radius: 8px;
-    background: var(--accent); color: #fff; font-weight: 600; cursor: pointer;
+    background: var(--on-accent); color: #fff; font-weight: 600; cursor: pointer;
 }
 .primary:hover:not(:disabled) { filter: brightness(1.1); }
 .ghost {
@@ -99,7 +110,7 @@ small { color: var(--muted); font-size: 13px; }
     padding: 0 14px; 
     border-radius: 999px; 
     cursor: pointer;
-    border: 1px solid #D1D5DB; 
+    border: 1px solid var(--btn-border); 
     background: var(--surface); 
     text-transform: capitalize; 
     color: var(--ink);
