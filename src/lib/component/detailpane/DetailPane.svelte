@@ -1,10 +1,14 @@
 <script lang="ts">
-    import { openUrl } from "@tauri-apps/plugin-opener";
-    import StatusPill from "./StatusPill.svelte";
+    import { openUrl, openPath } from "@tauri-apps/plugin-opener";
+    import StatusPill from "../StatusPill.svelte";
     let { app, ondelete, onedit } = $props();
     let confirming = $state(false);
 
     const withScheme = (u: string) => /^https?:\/\//.test(u) ? u : `https://${u}`;
+    const go = (u: string) => {
+        console.log("opening", withScheme(u));
+        openUrl(withScheme(u)).then(() => console.log("ok"), console.error);
+    };
 </script>
 
 <div class="pane divided">
@@ -22,8 +26,8 @@
         </p>
         {#if app.next_step}<p class="next">Next: {app.next_step}</p>{/if}
         <div class="links">
-            <button disabled={!app.website} onclick={() => openUrl(withScheme(app.website))}>Posting ↗</button>
-            <button disabled={!app.portal_url} onclick={() => openUrl(withScheme(app.portal_url))}>Portal ↗</button> 
+            <button disabled={!app.website} onclick={() => go(app.website)}>Posting ↗</button>
+            <button disabled={!app.portal_url} onclick={() => go(app.portal)}>Portal ↗</button> 
         </div>
     </section>
 
