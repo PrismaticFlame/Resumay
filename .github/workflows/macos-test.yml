@@ -9,13 +9,34 @@ jobs:
             matrix:
                 triple: [aarch64-apple-darwin, x86_64-apple-darwin]
         steps:
-            - uses: tauri-apps/tauri-action@v0
-              env:
-                TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-                TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-              with:
-                args: --target ${{ matrix.triple }}
-            - uses: actions/upload-artifact@v4
-              with:
-                name: resumay-${{ matrix.triple }}
-                path: src-tauri/target/${{ matrix.triple }}/release/bundle/dmg/*.dmg 
+        - uses: actions/checkout@v4
+        - uses: dtolnay/rust-toolchain@stable
+          with:
+            targets: aarch64-apple-darwin,x86_64-apple-darwin
+        - uses: actions/setup-node@v4
+          with:
+            node-version: lts/*
+            cache: npm
+        - run: npm ci
+
+        - name: Fetch Tectonic sidecar (MacOS)
+          if: runner.os == 'macOS'
+          run: |
+            mkdir -p src-tauri/binaries
+            curl -L "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.17.0/tectonic-0.17.0-${{ matrix.triple }}.tar.gz" | tar -xz -C /tmp
+            mv /tmp/tectonic src-tauri/binaries/tectonic-${{ matrix.triple }}
+            chmod +x src-tauri/binaries/tectonic-${{ matrix.triple }}
+            file src-tauri/binaries/tectonic-${{ matrix.triple }}
+            otool -L src-tauri/binaries/tectonic-${{ matrix.triple }}
+        
+        - uses: tauri-apps/tauri-action@v0
+          env:
+            TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+            TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          with:
+            args: --target ${{ matrix.triple }}
+
+        - uses: actions/upload-artifact@v4
+          with:
+            name: resumay-${{ matrix.triple }}
+            path: src-tauri/target/${{ matrix.triple }}/release/bundle/dmg/*.dmg
