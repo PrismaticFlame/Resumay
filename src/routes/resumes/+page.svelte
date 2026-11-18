@@ -5,7 +5,6 @@
     import { USES } from "$lib/status";
     import { refreshCounts } from "$lib/counts.svelte";
 
-    import Rail from "$lib/component/Rail.svelte";
     import ResumeDetailPane from "$lib/component/ResumeDetailPane.svelte";
     import ResumeList from "$lib/component/ResumeList.svelte"
 

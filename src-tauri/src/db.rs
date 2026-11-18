@@ -23,6 +23,7 @@ pub struct Application {
     notes: Option<String>,
     refer: Option<String>,
     apply_date: String,
+    resume_label: Option<String>,
 }
 
 pub fn add_application(
@@ -49,7 +50,9 @@ pub fn add_application(
 
 pub fn list_applications(conn: &Connection) -> Result<Vec<Application>, rusqlite::Error> {
     let mut stmt = conn.prepare(
-        "SELECT id, company, position, website, username, status, resume, notes, refer, apply_date, job_description FROM applications"
+        "SELECT a.id, a.company, a.position, a.website, a.username, a.status, a.resume, a.notes, a.refer, a.apply_date, a.job_description, r.label
+        FROM applications a
+        LEFT JOIN resumes r ON r.id = a.resume"
     )?;
     let appli_iter = stmt.query_map([], |row| {
         Ok(Application {
@@ -65,6 +68,7 @@ pub fn list_applications(conn: &Connection) -> Result<Vec<Application>, rusqlite
             refer: row.get::<_, Option<String>>(8)?,
             apply_date: row.get::<_, String>(9)?,
             job_description: row.get::<_, Option<String>>(10)?,
+            resume_label: row.get::<_, Option<String>>(11)?,
         })
     })?;
 

@@ -12,6 +12,7 @@ export interface Application {
     notes: string | null;
     refer: string | null;
     apply_date: string;
+    resume_label?: string | null;
   }
 
 export interface Resume {

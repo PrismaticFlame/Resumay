@@ -2,8 +2,6 @@
     import { invoke } from "@tauri-apps/api/core";
     import { onDestroy, onMount } from 'svelte';
     import { save } from "@tauri-apps/plugin-dialog"
-    
-    import Rail from "$lib/component/Rail.svelte";
 
     let compileError = $state("");
     let compiling = $state(false);

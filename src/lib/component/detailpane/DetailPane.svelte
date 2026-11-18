@@ -1,8 +1,12 @@
 <script lang="ts">
-    import { openUrl, openPath } from "@tauri-apps/plugin-opener";
+    import { openUrl } from "@tauri-apps/plugin-opener";
     import StatusPill from "../StatusPill.svelte";
     let { app, ondelete, onedit } = $props();
     let confirming = $state(false);
+    let showResume = $state(false);
+    let showTex = $state(false);
+
+    import ResumeDisplayModal from "../Resume/ResumeDisplayModal.svelte";
 
     const withScheme = (u: string) => /^https?:\/\//.test(u) ? u : `https://${u}`;
     const go = (u: string) => {
@@ -15,7 +19,7 @@
     <section>
         <div class="top">
             <StatusPill status={app.status} />
-            <button class="edit" onclick={() => onedit(app)}>Edit</button>
+            <!-- <button class="edit" onclick={() => onedit(app)}>Edit</button> -->
         </div>
         <h2>{app.company}</h2>
         <p class="role">{app.position}</p>
@@ -26,8 +30,9 @@
         </p>
         {#if app.next_step}<p class="next">Next: {app.next_step}</p>{/if}
         <div class="links">
-            <button disabled={!app.website} onclick={() => go(app.website)}>Posting ↗</button>
-            <button disabled={!app.portal_url} onclick={() => go(app.portal)}>Portal ↗</button> 
+            <button disabled={!app.website} onclick={() => go(app.website)}>Posting &#8599;</button>
+            <button disabled={!app.portal_url} onclick={() => go(app.portal)}>Portal &#8599;</button> 
+            <button class="edit" onclick={() => onedit(app)}>Edit &#9998;</button>
         </div>
     </section>
 
@@ -48,9 +53,21 @@
         <div class="row">
             <h3>Resume</h3>
         </div>
-        <div class="file"><b>PDF</b><span class="mono">{app.resume ?? "-"}</span><button>Open</button></div>
-        <div class="file"><b>TeX</b><span class="mono">{app.tex ?? "-"}</span><button>Open</button></div>
+        <div class="file">
+            <b>PDF</b><span class="mono">{app.resume_label ?? "-"}</span>
+            <button disabled={!app.resume} onclick={() => (showResume = true)}>Open &#128196;</button>
+        </div>
+        <div class="file">
+            <b>TeX</b><span class="mono">{app.tex ?? "-"}</span>
+            <button onclick={() => (showTex = true)}>Open</button>
+        </div>
 
+        {#if showResume}
+            <ResumeDisplayModal resumeId={app.resume} label={app.resume_label} onclose={() => (showResume = false)} />
+        {/if}
+        <!-- {#if showTex}
+            <ResumeDisplayModal onclose={() => (showTex = false)} />
+        {/if} -->
     </section>
     
     <section>

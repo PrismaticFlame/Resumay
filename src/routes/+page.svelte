@@ -6,8 +6,6 @@
   import { STATUS } from "$lib/status";
   import { refreshCounts } from "$lib/counts.svelte";
   
-
-  import Rail from "$lib/component/Rail.svelte";
   import DetailPane from "$lib/component/detailpane/DetailPane.svelte";
   import AppList from "$lib/component/AppList.svelte";
   import NewApplicationModal from "$lib/component/NewApplicationModal.svelte"
@@ -58,7 +56,6 @@
   });
 
 </script>
-
 
 <main>
   <header>
