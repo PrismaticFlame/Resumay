@@ -36,6 +36,9 @@
     "externalBin": [
       "binaries/tectonic"
     ],
+    "macOS": {
+      "signingIdentity": "-"
+    },
     "createUpdaterArtifacts": true
   },
   "plugins": {

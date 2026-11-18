@@ -247,6 +247,12 @@ pub fn run() {
                     .map_err(|e| format!("create store (windows): {e}"))?;
                 set_default_store(store);
             };
+            #[cfg(target_os = "macos")]
+            {
+                let store = apple_native_keyring_store::keychain::Store::new()
+                    .map_err(|e| format!("create store (macos): {e}"))?;
+                set_default_store(store);
+            };
             // tauri::async_runtime::spawn(async move {
             //     let body = serde_json::json!({
             //         "model": "llama3.2:3b",

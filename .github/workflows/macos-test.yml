@@ -1,0 +1,21 @@
+name: macOS test build
+on: workflow_dispatch
+
+jobs:
+    build:
+        runs-on: macos-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                triple: [aarch64-apple-darwin, x86_64-apple-darwin]
+        steps:
+            - uses: tauri-apps/tauri-action@v0
+              env:
+                TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+                TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+              with:
+                args: --target ${{ matrix.triple }}
+            - uses: actions/upload-artifact@v4
+              with:
+                name: resumay-${{ matrix.triple }}
+                path: src-tauri/target/${{ matrix.triple }}/release/bundle/dmg/*.dmg 

@@ -3883,6 +3883,7 @@ dependencies = [
 name = "resumay"
 version = "0.2.4"
 dependencies = [
+ "apple-native-keyring-store",
  "cargo-edit",
  "dbus-secret-service-keyring-store",
  "keyring",
