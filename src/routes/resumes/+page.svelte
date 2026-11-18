@@ -59,43 +59,41 @@
     }
 </script>
 
-<div class="shell">
-  <Rail />
-  <main>
-    <header>
-      <div>
-        <h1>Resumes</h1>
-        {#if filter !== "all" || query}
-          <span class="sub">{visible.length} of {resumes.length} shown</span>
-        {/if}
-      </div>
-      <input type="search" placeholder="Search resumes" bind:value={query} />
-      <button class="primary" onclick={() => showModal = true}>+ New Resume</button>
-      <!-- Button for new Resumes here -->
-    </header>
 
-    <div class="chips">
-      {#each ["all", ...Object.keys(USES)] as f}
-        <button class="chip" class:on={filter === f} onclick={() => filter = f}>{f}</button>
-      {/each}
+<main>
+  <header>
+    <div>
+      <h1>Resumes</h1>
+      {#if filter !== "all" || query}
+        <span class="sub">{visible.length} of {resumes.length} shown</span>
+      {/if}
     </div>
+    <input type="search" placeholder="Search resumes" bind:value={query} />
+    <button class="primary" onclick={() => showModal = true}>+ New Resume</button>
+    <!-- Button for new Resumes here -->
+  </header>
 
-    <div class="work">
-      <div>
-        {#if rSelected}
-          {#key rSelected.id}
-            <ResumeDetailPane resume={rSelected} ondelete={() => deleteResume(rSelected.id)}/>
-          {/key}
-        {/if}
-      </div>
-      <div><ResumeList resume={visible} rSelectedId={rSelected?.id} onselect={(id: number) => { rSelectedId = id; previewUrl = ""; }} /></div>
+  <div class="chips">
+    {#each ["all", ...Object.keys(USES)] as f}
+      <button class="chip" class:on={filter === f} onclick={() => filter = f}>{f}</button>
+    {/each}
+  </div>
+
+  <div class="work">
+    <div>
+      {#if rSelected}
+        {#key rSelected.id}
+          <ResumeDetailPane resume={rSelected} ondelete={() => deleteResume(rSelected.id)}/>
+        {/key}
+      {/if}
     </div>
-  </main>
-</div>
+    <div><ResumeList resume={visible} rSelectedId={rSelected?.id} onselect={(id: number) => { rSelectedId = id; previewUrl = ""; }} /></div>
+  </div>
+</main>
+
 
 <style>
 
-  .shell { display: grid; grid-template-columns: 224px 1fr; height: 100vh; }
   main { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
   header { display: flex; align-items: center; gap: 16px; padding: 22px 28px 14px; }
   header div { flex: 1; }

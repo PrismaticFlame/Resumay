@@ -27,5 +27,11 @@ export default defineConfig(() => ({
       // 3. tell Vite to ignore watching `src-tauri`
       ignored: ["**/src-tauri/**"],
     },
+    optimizeDeps: {
+      include: [
+        "@tauri-apps/api/core",
+        "@tauri-apps/plugin-opener",
+      ]
+    }
   },
 }));

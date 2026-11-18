@@ -3,6 +3,7 @@
     import { checkForUpdate, loadVersion, updater } from "$lib/updater.svelte";
 
     import UpdateModal from "$lib/component/settings/UpdateModal.svelte";
+    import Rail from "$lib/component/Rail.svelte";
 
     import "@fontsource/ibm-plex-sans/400.css";
     import "@fontsource/ibm-plex-sans/600.css";
@@ -21,7 +22,14 @@
     
 </script>
 
-{@render children()}
+<div class="shell">
+    <Rail />
+    {@render children()}
+</div>
+
+<style>
+    .shell { display: grid; grid-template-columns: 224px 1fr; height: 100vh; }
+</style>
 
 {#if updater.available && !updater.dismissed}
     <UpdateModal />

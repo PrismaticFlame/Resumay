@@ -69,56 +69,54 @@
     });
 </script>
 
-<div class="shell">
-    <Rail />
-    <main>
-        <header>
-            <div>
-                <h1>Editor</h1>
-            </div>
-        </header>
 
-        <div class="panes">
-            <div class="left">
-                <div class="pane-head">
-                    <span>Source</span>
-                    <div class="pane-actions">
-                        <button class="primary" onclick={compileLatex} disabled={compiling}>
-                            {compiling ? "Compiling..." : "Compile Latex"}
-                        </button>
-                        <button class="ghost" onclick={saveTex}>Save .tex</button>
-                    </div>
-                </div>
-                <textarea 
-                bind:value={latexSource} 
-                spellcheck="false" 
-                placeholder={"\\documentclass{article}\n\\begin{document}\nHello, World!\n\\end{document}"}>
-                </textarea>
-            </div>
+<main>
+    <header>
+        <div>
+            <h1>Editor</h1>
+        </div>
+    </header>
 
-            <div class="right">
-                <div class="pane-head">
-                    <span>Preview</span>
-                    <button disabled={!pdfBlobUrl} class="primary" onclick={savePdf}>
-                        {"Save PDF"}
+    <div class="panes">
+        <div class="left">
+            <div class="pane-head">
+                <span>Source</span>
+                <div class="pane-actions">
+                    <button class="primary" onclick={compileLatex} disabled={compiling}>
+                        {compiling ? "Compiling..." : "Compile Latex"}
                     </button>
+                    <button class="ghost" onclick={saveTex}>Save .tex</button>
                 </div>
-                <div class="viewer">
-                    {#if compileError}<pre class="error">{compileError}</pre>{/if}
-                    {#if pdfBlobUrl}
-                        <iframe title="Resume preview" src="{pdfBlobUrl}#toolbar=0&navpanes=0"></iframe>
-                    {:else if !compileError}
-                        <small>Compile to see the preview!</small>
-                    {/if}
-                </div>
+            </div>
+            <textarea 
+            bind:value={latexSource} 
+            spellcheck="false" 
+            placeholder={"\\documentclass{article}\n\\begin{document}\nHello, World!\n\\end{document}"}>
+            </textarea>
+        </div>
+
+        <div class="right">
+            <div class="pane-head">
+                <span>Preview</span>
+                <button disabled={!pdfBlobUrl} class="primary" onclick={savePdf}>
+                    {"Save PDF"}
+                </button>
+            </div>
+            <div class="viewer">
+                {#if compileError}<pre class="error">{compileError}</pre>{/if}
+                {#if pdfBlobUrl}
+                    <iframe title="Resume preview" src="{pdfBlobUrl}#toolbar=0&navpanes=0"></iframe>
+                {:else if !compileError}
+                    <small>Compile to see the preview!</small>
+                {/if}
             </div>
         </div>
-        
-    </main>
-</div>
+    </div>
+    
+</main>
+
 
 <style>
-    .shell { display: grid; grid-template-columns: 224px 1fr; height: 100vh; }
     main { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
     header { display: flex; align-items: center; gap: 16px; padding: 22px 28px 14px; }
     header div { flex: 1; }

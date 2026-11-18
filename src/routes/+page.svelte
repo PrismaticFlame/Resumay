@@ -8,7 +8,7 @@
   
 
   import Rail from "$lib/component/Rail.svelte";
-  import DetailPane from "$lib/component/DetailPane.svelte";
+  import DetailPane from "$lib/component/detailpane/DetailPane.svelte";
   import AppList from "$lib/component/AppList.svelte";
   import NewApplicationModal from "$lib/component/NewApplicationModal.svelte"
 
@@ -59,50 +59,49 @@
 
 </script>
 
-<div class="shell">
-  <Rail />
-  <main>
-    <header>
-      <div>
-        <h1>Applications</h1>
-        {#if filter !== "all" || query}
-          <span class="sub">{visible.length} of {applications.length} shown</span>
-        {/if}
-      </div>
-      <input type="search" placeholder="Search company or role" bind:value={query} />
-      <button class="primary" onclick={() => showModal = true}>+ New application</button>
-    </header>
 
-    <div class="chips">
-      {#each ["all", ...Object.keys(STATUS)] as f}
-        <button class="chip" class:on={filter === f} onclick={() => filter = f}>{f}</button>
-      {/each}
+<main>
+  <header>
+    <div>
+      <h1>Applications</h1>
+      {#if filter !== "all" || query}
+        <span class="sub">{visible.length} of {applications.length} shown</span>
+      {/if}
+      {#if message}<p class="sub">{message}</p>{/if}
     </div>
+    <input type="search" placeholder="Search company or role" bind:value={query} />
+    <button class="primary" onclick={() => showModal = true}>+ New application</button>
+  </header>
 
-    <div class="work">
-      <div><AppList apps={visible} selectedId={selected?.id} onselect={(id: number) => selectedId = id} /></div>
-      <div>
-        {#if selected}
-          {#key selected.id}
-            <DetailPane app={selected} ondelete={() => deleteApplication(selected.id)} onedit={() => editing = selected}/>
-          {/key}
-        {/if}
-      </div>
+  <div class="chips">
+    {#each ["all", ...Object.keys(STATUS)] as f}
+      <button class="chip" class:on={filter === f} onclick={() => filter = f}>{f}</button>
+    {/each}
+  </div>
+
+  <div class="work">
+    <div><AppList apps={visible} selectedId={selected?.id} onselect={(id: number) => selectedId = id} /></div>
+    <div>
+      {#if selected}
+        {#key selected.id}
+          <DetailPane app={selected} ondelete={() => deleteApplication(selected.id)} onedit={() => editing = selected}/>
+        {/key}
+      {/if}
     </div>
+  </div>
 
-    {#if showModal}
-      <NewApplicationModal onclose={() => showModal = false} onsaved={handleSaved} />
-    {/if}
+  {#if showModal}
+    <NewApplicationModal onclose={() => showModal = false} onsaved={handleSaved} />
+  {/if}
 
-    {#if editing}
-      <NewApplicationModal app={editing} onclose={() => editing = null} onsaved={handleSaved} />
-    {/if}
-  </main>
-</div>
+  {#if editing}
+    <NewApplicationModal app={editing} onclose={() => editing = null} onsaved={handleSaved} />
+  {/if}
+</main>
+
 
 <style>
   
-  .shell { display: grid; grid-template-columns: 224px 1fr; height: 100vh; }
   main { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
   header { display: flex; align-items: center; gap: 16px; padding: 22px 28px 14px; }
   header div { flex: 1; }
