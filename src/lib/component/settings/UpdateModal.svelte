@@ -21,9 +21,9 @@
         <h2>Update available</h2>
         <p class="muted">Resumay {updater.available?.version} is available (you have {app.version}).</p>
 
-        {#if updater.available?.notes}
+        <!-- {#if updater.available?.notes}
             <pre class="notes">{updater.available.notes}</pre>
-        {/if}
+        {/if} -->
 
         {#if updater.status === 'downloading'}
             <progress value={updater.progress}></progress>

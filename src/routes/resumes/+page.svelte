@@ -9,6 +9,11 @@
     import ResumeList from "$lib/component/ResumeList.svelte"
 
     let resumes = $state<Resume[]>([]);
+    let counts = $derived.by(() => {
+      const c: Record<string, number> = {};
+      for (const u of Object.keys(USES)) c[u] = resumes.filter(r => r.uses > 0).length;
+      return c;
+    }) 
 
     let query = $state("");
     let filter = $state("all");
@@ -63,6 +68,7 @@
   <header>
     <div>
       <h1>Resumes</h1>
+      <!-- <span class="sub">{resumes.length} tracked · {counts["used"]} used · {counts["unused"]} unused</span> -->
       {#if filter !== "all" || query}
         <span class="sub">{visible.length} of {resumes.length} shown</span>
       {/if}

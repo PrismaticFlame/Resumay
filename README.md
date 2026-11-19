@@ -61,9 +61,3 @@ To open it:
 System Settings → Privacy & Security → scroll down → **Open Anyway**.
 
 Or, in Terminal: `xattr -dr com.apple.quarantine /Applications/resumay.app`
-
-## WIP
-
-Version 0.1.0 is released! It is a working Alpha now if you're interested in checking it out.
-
-![Resumay-Version-1](static/resumay_v0.1.0_frontend.png)

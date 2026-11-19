@@ -118,6 +118,9 @@ small { color: var(--muted); font-size: 13px; }
     padding: 0 28px 16px; 
 }
 .chip { 
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     min-height: 40px; 
     padding: 0 14px; 
     border-radius: 999px; 
@@ -131,4 +134,8 @@ small { color: var(--muted); font-size: 13px; }
     background: var(--ink); 
     border-color: var(--ink); 
     color: var(--surface); 
+}
+.n {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
 }

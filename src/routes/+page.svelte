@@ -19,6 +19,12 @@
   let message = $state("");
   let applications = $state<Application[]>([]);
 
+  let counts = $derived.by(() => {
+    const c: Record<string, number> = {};
+    for (const s of Object.keys(STATUS)) c[s] = applications.filter(a => a.status === s).length;
+    return c;
+  })
+
   let visible = $derived(applications.filter(a =>
   (filter === "all" || a.status === filter) &&
   `${a.company} ${a.position}`.toLowerCase().includes(query.toLowerCase())
@@ -55,15 +61,15 @@
     listApplications();
   });
 
+  type StatusKey = keyof typeof STATUS;
+  const statues = Object.keys(STATUS) as StatusKey[];
 </script>
 
 <main>
   <header>
     <div>
       <h1>Applications</h1>
-      {#if filter !== "all" || query}
-        <span class="sub">{visible.length} of {applications.length} shown</span>
-      {/if}
+      <span class="sub">{applications.length} tracked · {counts["interviewing"]} interviewing · {counts["offer"]} offers</span>
       {#if message}<p class="sub">{message}</p>{/if}
     </div>
     <input type="search" placeholder="Search company or role" bind:value={query} />
@@ -72,7 +78,20 @@
 
   <div class="chips">
     {#each ["all", ...Object.keys(STATUS)] as f}
-      <button class="chip" class:on={filter === f} onclick={() => filter = f}>{f}</button>
+      <button class="chip" class:on={filter === f} onclick={() => filter = f}>{f}<span class="n">{f === "all" ? applications.length : counts[f]}</span></button>
+    {/each}
+  </div>
+
+  <div class="bar">
+    {#each statues as f}
+      {#if counts[f] > 0}
+        <span class="seg"
+          style:flex="{counts[f]} 1 0px"
+          style:background={STATUS[f].bg}
+          style:color={STATUS[f].fg}>
+          {counts[f]} {STATUS[f].label}
+        </span>
+      {/if}
     {/each}
   </div>
 
@@ -103,6 +122,7 @@
   header { display: flex; align-items: center; gap: 16px; padding: 22px 28px 14px; }
   header div { flex: 1; }
   h1 { margin: 0; font-size: 24px; font-weight: 600; }
+  .bar { display: flex; gap: 4px; height: 34px; padding: 0 28px 16px; }
   .sub { color: var(--muted); font-size: 13px; }
   input[type="search"] { width: 300px; min-height: 44px; padding: 0 12px;
     border: 1px solid #D1D5DB; border-radius: 8px; background: var(--surface); }
@@ -112,6 +132,9 @@
     flex: 1; min-height: 0; padding: 0 28px 28px; }
   .work > div { background: var(--surface); border: 1px solid var(--line);
     border-radius: 12px; overflow-y: auto; overflow-x: hidden; }
+  .seg { display: flex; align-items: center; padding: 0 12px; border-radius: 8px;
+       font-size: 12px; font-weight: 600; white-space: nowrap;
+       min-width: max-content; overflow: hidden; }
 
 </style>
 

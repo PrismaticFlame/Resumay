@@ -55,12 +55,12 @@
         </div>
         <div class="file">
             <b>PDF</b><span class="mono">{app.resume_label ?? "-"}</span>
-            <button disabled={!app.resume} onclick={() => (showResume = true)}>Open &#128196;</button>
+            <button disabled={!app.resume} onclick={() => (showResume = true)}>Open</button>
         </div>
-        <div class="file">
+        <!-- <div class="file">
             <b>TeX</b><span class="mono">{app.tex ?? "-"}</span>
             <button onclick={() => (showTex = true)}>Open</button>
-        </div>
+        </div> -->
 
         {#if showResume}
             <ResumeDisplayModal resumeId={app.resume} label={app.resume_label} onclose={() => (showResume = false)} />

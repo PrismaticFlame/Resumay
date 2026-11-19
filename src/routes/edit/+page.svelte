@@ -50,6 +50,10 @@
         await invoke("write_bytes", { path, contents: lastPdf });
     }
 
+    function clearTex() {
+        latexSource = "";
+    }
+
     onMount(async () => {
         latexSource = await invoke<string>("load_draft");
         loaded = true;
@@ -84,6 +88,7 @@
                         {compiling ? "Compiling..." : "Compile Latex"}
                     </button>
                     <button class="ghost" onclick={saveTex}>Save .tex</button>
+                    <button class="ghost" onclick={clearTex}>Clear</button>
                 </div>
             </div>
             <textarea 
