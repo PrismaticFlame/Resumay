@@ -7,11 +7,12 @@
 
     import ResumeDetailPane from "$lib/component/ResumeDetailPane.svelte";
     import ResumeList from "$lib/component/ResumeList.svelte"
+    import NewResumeModal from "$lib/component/NewResumeModal.svelte";
 
     let resumes = $state<Resume[]>([]);
     let counts = $derived.by(() => {
       const c: Record<string, number> = {};
-      for (const u of Object.keys(USES)) c[u] = resumes.filter(r => r.uses > 0).length;
+      for (const u of Object.keys(USES)) c[u] = resumes.filter(r => (u === "used") === (r.uses > 0)).length;
       return c;
     }) 
 
@@ -61,6 +62,12 @@
         message = String(err);
       }
     }
+
+    async function handleSaved(id: number) {
+      await load();
+      rSelectedId = id;
+      showModal = false;
+    }
 </script>
 
 
@@ -68,10 +75,11 @@
   <header>
     <div>
       <h1>Resumes</h1>
-      <!-- <span class="sub">{resumes.length} tracked · {counts["used"]} used · {counts["unused"]} unused</span> -->
+      <span class="sub">{resumes.length} tracked · {counts["used"]} used · {counts["unused"]} unused</span>
       {#if filter !== "all" || query}
         <span class="sub">{visible.length} of {resumes.length} shown</span>
       {/if}
+      {#if message}<p class="error" role="alert">{message}</p>{/if}
     </div>
     <input type="search" placeholder="Search resumes" bind:value={query} />
     <button class="primary" onclick={() => showModal = true}>+ New Resume</button>
@@ -94,6 +102,10 @@
     </div>
     <div><ResumeList resume={visible} rSelectedId={rSelected?.id} onselect={(id: number) => { rSelectedId = id; previewUrl = ""; }} /></div>
   </div>
+
+  {#if showModal}
+    <NewResumeModal onclose={() => showModal = false} onsaved={handleSaved} />
+  {/if}
 </main>
 
 

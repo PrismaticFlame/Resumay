@@ -113,6 +113,7 @@
         <form onsubmit={submit}>
           <div class="left">
             <!-- this causes the select and the drag-n-drop to affect each other so that one doesn't override the other -->
+             <!-- also this is the drop down menu right here -->
             <select bind:value={resumeId} onchange={clearFile}> 
                 <option value={null}>No resume</option>
                 {#each resumes as r (r.id)}
