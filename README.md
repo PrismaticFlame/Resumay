@@ -49,6 +49,19 @@ Check out the details of each application to remind yourself just where you *are
     <img src="static/resumay_v0.1.0_detail_pane.png">
 </div>
 
+# Install
+- **Windows**: download the `.msi` or `-setup.exe` file
+- **Linux**: download the `.deb` (Debian/Ubuntu/Manjaro) or `.AppImage` (universal) files
+
+## macOS
+Download the `.dmg` for your Mac: `aarch64` for Apple Silicon, `x64` for Intel.
+Resumay isn't notarized yet, so macOS blocks the first launch. 
+
+To open it:
+System Settings → Privacy & Security → scroll down → **Open Anyway**.
+
+Or, in Terminal: `xattr -dr com.apple.quarantine /Applications/resumay.app`
+
 ## WIP
 
 Version 0.1.0 is released! It is a working Alpha now if you're interested in checking it out.

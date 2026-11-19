@@ -26,8 +26,6 @@ jobs:
             curl -L "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.17.0/tectonic-0.17.0-${{ matrix.triple }}.tar.gz" | tar -xz -C /tmp
             mv /tmp/tectonic src-tauri/binaries/tectonic-${{ matrix.triple }}
             chmod +x src-tauri/binaries/tectonic-${{ matrix.triple }}
-            file src-tauri/binaries/tectonic-${{ matrix.triple }}
-            otool -L src-tauri/binaries/tectonic-${{ matrix.triple }}
         
         - uses: tauri-apps/tauri-action@v0
           env:
@@ -35,6 +33,13 @@ jobs:
             TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
           with:
             args: --target ${{ matrix.triple }}
+
+        - name: Inspect signatures
+          run: |
+            APP=src-tauri/target/${{ matrix.triple }}/release/bundle/macos/resumay.app
+            codesign -dv --verbose=4 "$APP/Contents/MacOS/tectonic" 2>&1 | head -20
+            codesign -dv --verbose=4 "$APP" 2>&1 | head -20
+            codesign --verify --deep --strict "$APP" && echo "signature OK"
 
         - uses: actions/upload-artifact@v4
           with:
