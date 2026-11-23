@@ -1,7 +1,9 @@
-![Resumay Logo](src/lib/assets/resumay-logo.svg)
+<!-- ![Resumay Logo](src/lib/assets/resumay-logo.svg) -->
 
 
 <div align="center">
+
+<img src="src/lib/assets/resumay_screenshots.png">
 
 [![SvelteKit](https://img.shields.io/badge/SvelteKit-%23f1413d.svg?logo=svelte&logoColor=white)](https://svelte.dev/docs/kit/introduction)
 [![HTML](https://img.shields.io/badge/HTML-%23E34F26.svg?logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Glossary/HTML5)
