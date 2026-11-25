@@ -11,3 +11,9 @@ export const USES = {
     used:    { label: "Used",   fg: "#115E59", bg: "#CCFBF1" },
     unused:  { label: "Unused", fg: "#374151", bg: "#E5E7EB" },
 }
+
+export const WORKTYPE = {
+    remote:   { label: "Remote" },
+    hybrid:   { label: "Hybrid" },
+    on_site:  { label: "On-Site" },
+}
