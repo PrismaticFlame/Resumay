@@ -24,7 +24,8 @@
     <a href="/edit" class="item" class:on={page.url.pathname === "/edit"}>
         <span>Edit</span>
     </a>
-    <button class="item">Tailor</button>
+    <!-- <button class="item">Tailor</button> -->
+     
     <button class ="item settings" onclick={() => (showSettings = true)}>Settings</button>
 
     {#if showSettings}

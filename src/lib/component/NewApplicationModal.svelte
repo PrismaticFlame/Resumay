@@ -116,82 +116,6 @@
     });
 </script>
 
-<!-- <div class="overlay">
-    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="new-title">
-        <h2 id="new-title">{app ? "Edit application" : "New application"}</h2>
-
-        <form onsubmit={submit}>
-          <div class="left"> -->
-            <!-- this causes the select and the drag-n-drop to affect each other so that one doesn't override the other -->
-             <!-- also this is the drop down menu right here -->
-            <!-- <select bind:value={resumeId} onchange={clearFile}> 
-                <option value={null}>No resume</option>
-                {#each resumes as r (r.id)}
-                  <option value={r.id}>{r.label} · {timeFormat(r.created_at)}</option>
-                {/each}
-              </select>
-
-            <label class="drop" class:over={dragging}
-              ondragover={(e) => { e.preventDefault(); dragging = true; }}
-              ondragleave={() => dragging = false}
-              ondrop={(e) => {
-                e.preventDefault(); dragging = false;
-                resumeFile = e.dataTransfer?.files[0] ?? null;
-                resumeId = null;
-              }}>
-              <input type="file" bind:this={fileInput} accept=".pdf" hidden
-              onchange={(e) => {
-                resumeFile = e.currentTarget.files?.[0] ?? null; 
-                resumeId = null;
-              }} />
-              {#if resumeFile}
-                <b>{resumeFile.name}</b>
-              {:else}
-                <b>Drop your resume here</b>
-                <small>or click to browse · PDF</small>
-              {/if}
-            </label>
-
-            <div class="preview">
-              {#if previewUrl}
-                <iframe title="Selected resume" src="{previewUrl}#pagemode=none&zoom=page-fit"></iframe>
-              {:else}
-                <p class="empty">Choose or upload a resume to preview it here</p>
-              {/if}
-            </div>
-
-          </div>
-
-          <div class="right">
-            <input placeholder="Company *" bind:value={company} required />
-            <input placeholder="Position *" bind:value={position} required />
-            <input placeholder="Website URL" bind:value={website} />
-            <textarea placeholder="Job Description" bind:value={jobDescription}></textarea>
-            <input type="date" bind:value={applyDate} />
-
-            <select bind:value={status}>
-                {#each Object.entries(STATUS) as [key, s]}
-                  <option value={key}>{s.label}</option>
-                {/each}
-            </select>
-
-            <input placeholder="Referral" bind:value={refer} />
-            <input placeholder="Username" bind:value={username} />
-            <input type="password" bind:value={password} 
-                placeholder={app ? "New password (blank = keep current)" : "Password"}/>
-            <textarea placeholder="Notes" bind:value={notes}></textarea>
-          </div>
-
-          {#if error}<p class="error">{error}</p>{/if}
-
-          <div class="actions">
-              <button type="button" onclick={onclose}>Cancel</button>
-              <button type="submit" class="primary">{app ? "Save changes" : "Save application"}</button>
-          </div>
-        </form>
-    </div>
-</div> -->
-
 <dialog
     bind:this={dialog}
     aria-label="New Application"
@@ -215,6 +139,14 @@
     <Field label="Work Mode">
       <select bind:value={workMode}>
       {#each Object.entries(WORKTYPE) as [key, s]}
+        <option value={key}>{s.label}</option>
+      {/each}
+    </select>
+    </Field>
+      
+    <Field label="Status">
+      <select bind:value={status}>
+      {#each Object.entries(STATUS) as [key, s]}
         <option value={key}>{s.label}</option>
       {/each}
     </select>
@@ -267,8 +199,9 @@
   /* .right { display: flex; flex-direction: column; gap: 10px;} */
   .right textarea { min-height: 90px; resize: vertical; }
   input, select, textarea { min-height: 44px; min-width: 0; padding: 8px 12px;
-    border: 1px solid var(--btn-border); border-radius: 8px;
-    background: var(--btn-bg); color: var(--ink); font-size: 14px; }
+    border: 1px solid var(--btn-border); border-radius: 8px; box-sizing: border-box;
+    background: var(--btn-bg); color: var(--ink); font-size: 14px; 
+    -webkit-appearance: none; appearance: none;}
   input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
   select { appearance: none; padding-right: 36px; cursor: pointer; 
     background: var(--btn-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")
@@ -280,6 +213,7 @@
   .actions .primary { background: var(--accent); border-color: var(--accent);
     color: var(--on-accent); font-weight: 600; }
   .error { margin: 0; color: var(--danger); font-size: 13px; }
+  option { background: var(--btn-bg); color: var(--ink); }
   
 
   /* .overlay { position: fixed; inset: 0; display: flex; align-items: center;
